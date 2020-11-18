@@ -15,10 +15,14 @@ SetWorkingDir %A_ScriptDir%
 #Include %A_ScriptDir%\Botit Functions\func.ahk
 #Include %A_ScriptDir%\Core\INIReader.ahk  ; Get Image Cords from INI
 
+;Settings detect
 
+
+
+#Include %A_ScriptDir%\Core\GUI.ahk
 
 ;GUI Call ************* 
-#Include %A_ScriptDir%\Core\GUI.ahk
+
 ;Gui Call *************
 
 return
@@ -214,26 +218,7 @@ BioBreaker()
 	return
 }
  
-;Function Help GUI
-guiTUT()
-{
-	IfnotExist,Botit ini\Settings.ini
-	{
-		Gui New,
-		Gui Add, Picture, x320 y10 w32 h32 gbuttonClosegui, Gui\Botit Exit.png
-		closeSettingsmenu_TT := "Destroy Settings Menu" 
-		
-		
-		Gui, Color, 24292E
-		Gui Font, Bold s10
-		
-		Gui Add,button ,x150 y+20 gSkip , skip
-		
-		gui -SysMenu
-		Gui Show, center ,BotIt TUT
-	}
-	return
-}
+
 
 ;Label Skip
 Skip:
@@ -263,52 +248,55 @@ Pause:
 	
 ButtonSave:
 Gui, Submit, NoHide
-If (Controlchoice = "PC/Emulator")
+;msgbox,%testgate%
+;click read
+if (controller1=1)
 {
-		ekuM = Auto-Mirror|PC/Emulator||HumanMouse|
-		
-		IniWrite,%Controlchoice%,Botit ini/Settings.ini,Botit Settings,ControlPick
-		IniWrite,%ekuM%,Botit ini/Settings.ini,Botit Settings,Controlchoice
-		
-		
+	IniWrite,Auto-Mirror,Botit ini/Settings.ini,Botit Settings,ControlPick
 }
-				
-If (Controlchoice = "Auto-Mirror")
+if (controller2=1)
 {
-		AutoM = Auto-Mirror||PC/Emulator|HumanMouse|
-		IniWrite,%Controlchoice%,Botit ini/Settings.ini,Botit Settings,ControlPick
-		IniWrite,%AutoM%,Botit ini/Settings.ini,Botit Settings,Controlchoice
-		
+	IniWrite,PC/Emulator,Botit ini/Settings.ini,Botit Settings,ControlPick
 }
-	
-If (Controlchoice = "HumanMouse")
+if (controller3=1)
 {
-		AutoM = Auto-Mirror|PC/Emulator|HumanMouse||
-		IniWrite,%Controlchoice%,Botit ini\Settings.ini,Botit Settings,ControlPick
-		IniWrite,%AutoM%,Botit ini/Settings.ini,Botit Settings,Controlchoice
-		
+	IniWrite,HumanMouse,Botit ini/Settings.ini,Botit Settings,ControlPick
 }
-	
-if(Scanchoice = "GrayScale")
+
+;rnd scan read
+if (RndScan1=1)
 {
-		GrayScaleM = Color|GrayScale||
-		IniWrite,%Scanchoice%,Botit ini\Settings.ini,Botit Settings,ScanPick
-		IniWrite,%GrayScaleM%,Botit ini\Settings.ini,Botit Settings,Botitrnd
+	IniWrite,GrayScale,Botit ini/Settings.ini,Botit Settings,ScanPick
 }
-	
-if(Scanchoice = "Color")
+Else
 {
-		ColorSM = Color||GrayScale|
-		IniWrite,%Scanchoice%,Botit ini\Settings.ini,Botit Settings,ScanPick
-		IniWrite,%ColorSM%,Botit ini\Settings.ini,Botit Settings,Botitrnd
+	IniWrite,Color,Botit ini/Settings.ini,Botit Settings,ScanPick
+}
+
+;biobreaker
+if (biobrk1=1)
+{
+	IniWrite,1,Botit ini/Settings.ini,Botit Settings,biobreaker
+}
+Else
+{
+	IniWrite,0,Botit ini/Settings.ini,Botit Settings,biobreaker
 }
 	
 IniWrite,%SleepAmountA%,Botit ini\Settings.ini,Botit Settings,SleepAmountA
 IniWrite,%SleepAmountB%,Botit ini\Settings.ini,Botit Settings,SleepAmountB
 IniWrite,%SleepAmountC%,Botit ini\Settings.ini,Botit Settings,SleepAmountC
 IniWrite,%SleepAmountD%,Botit ini\Settings.ini,Botit Settings,SleepAmountD
-msgbox,,,Save Fin,2
-reload
+
+
+msgbox,,,Save Fin,1
+if (testgate=1)
+{
+	reload
+}
+guiiniread()
+
+gui,Destroy
 return
 	
 ButtonRestart:
@@ -468,7 +456,7 @@ Return
 	
 	
 Discord:
-run,https://discord.gg/ggRCXS2
+run,%discord%
 return
 	
 Check:

@@ -5,110 +5,42 @@
 ;********* Buttons ;gui's
 guimain1:
 critical,off
-global targetwindow
-IniRead,MemberBerriesini,Botit ini/Settings.ini,Botit Settings,MemberBerries
+guiiniread()
+IfnotExist,Botit ini\Settings.ini
 {
-	targetwindow := MemberBerriesini
-}
-IfEqual MemberBerriesini ,ERROR
-{
-	targetwindow := "Grab & left Click" ;Window name	
+	testgate:=1
+	gosub,SettingsMenu
+	return
 }
 
+; global controller1
+; IniRead,controller1ini,Botit ini/Settings.ini,Botit Settings,Controlchoice
+; {
 
-global SleepAmountA
-IniRead,SleepAmountAini,Botit ini/Settings.ini,Botit Settings,SleepAmountA
-{
-	SleepAmountA := SleepAmountAini
-}
-IfEqual SleepAmountAini ,ERROR
-{
-	SleepAmountA := 110	
-}
+; 	controller1 := controller1ini
+; }
+; IfEqual controller1ini ,ERROR
+; {
+; 	controller1 = Auto-Mirror||PC/Emulator|HumanMouse|
+; }
 
-global SleepAmountB
-IniRead,SleepAmountBini,Botit ini/Settings.ini,Botit Settings,SleepAmountB
-{
+; global controller2
+; IniRead,controller2ini,Botit ini/Settings.ini,Botit Settings,Botitrnd
+; {
 
-	SleepAmountB := SleepAmountBini
-}
-IfEqual SleepAmountBini ,ERROR
-{
-	SleepAmountB := 215	
-}
+; 	controller2 := controller2ini
 
-global SleepAmountC
-IniRead,SleepAmountCini,Botit ini/Settings.ini,Botit Settings,SleepAmountC
-{
+; }
 
-	SleepAmountC := SleepAmountCini
-
-}
-IfEqual SleepAmountCini ,ERROR
-{
-	SleepAmountC := 2750	
-}
-
-
-global SleepAmountD
-IniRead,SleepAmountDini,Botit ini/Settings.ini,Botit Settings,SleepAmountD
-{
-	SleepAmountD := SleepAmountDini
-}
-IfEqual SleepAmountDini ,ERROR
-{
-	SleepAmountD := 3750	
-}
-
-global controller1
-IniRead,controller1ini,Botit ini/Settings.ini,Botit Settings,Controlchoice
-{
-
-	controller1 := controller1ini
-}
-IfEqual controller1ini ,ERROR
-{
-	controller1 = Auto-Mirror||PC/Emulator|HumanMouse|
-}
-
-global controller2
-IniRead,controller2ini,Botit ini/Settings.ini,Botit Settings,Botitrnd
-{
-
-	controller2 := controller2ini
-
-}
-
-IfEqual controller2ini ,ERROR
-{
-	controller2 = Color|GrayScale||
+; IfEqual controller2ini ,ERROR
+; {
+; 	controller2 = Color|GrayScale||
 	
-}	
+; }	
 
-global Controlchoice
-IniRead,controlPickini,Botit ini/Settings.ini,Botit Settings,ControlPick
-{
-	
-	Controlchoice := controlPickini
-}
-IfEqual controlPickini ,ERROR
-{
-	 Controlchoice = Auto-Mirror
-}
 
-global Scanchoice
-IniRead,ScanPickini,Botit ini/Settings.ini,Botit Settings,ScanPick
-{
-	
-	 Scanchoice := ScanPickini
-	
-}
 
-IfEqual ScanPickini ,ERROR
-{
-	Scanchoice = GrayScale
 	
-}	
 
 global TotalTime2 := 0
 global timeBio := 0
@@ -119,6 +51,13 @@ tempvictory := 0
 global Vt1 := 350
 global Vt2 := 1000
 
+
+
+;Build Setting importer
+IniRead,botname,Botit ini\Build.ini,Botit Build,botname
+IniRead,botver,Botit ini\Build.ini,Botit Build,botver
+IniRead,buildername,Botit ini\Build.ini,Botit Build,buildername
+IniRead,discord,Botit ini\Build.ini,Botit Build,discord
 
 
 SetWorkingDir %A_ScriptDir%
@@ -152,106 +91,364 @@ IfExist,Gui\favicon.png
 	Gui Font, Bold s10
 	Gui Add, Text, x+20 y41 h20 cwhite , Target Window:
 	Gui Font, Bold
-	Gui, Add, Edit, x+20 y40 w108 h20 +0x200 vtargetwindow gsubmit_all, %targetwindow%
+	Gui, Add, Edit, x+20 y40 w150 h20 +0x200 vtargetwindow gsubmit_all, %targetwindow%
 	targetwindow_TT := "Target Window/Window Name For botit to scan"
 	Gui Add, Picture, x+15 y28 w35 h40 gGrab vGrabber, Gui\GrabBotit.png
 	Grabber_TT := "Left Click on Target Window After MSG Gone"
 	Gui Font, Bold s10
 	Gui Add, Text, x10 y+40 cwhite h20 +0x200 , Mode:
-	Gui Add, DropDownList, x+20   vmenuChoice gsubmit_all2,
+	Gui Add, DropDownList, x+20  w190 vmenuChoice gsubmit_all2,
 	INItoDDL2("menuChoice","Botit ini\Botit.ini", "Botit Modes")
-	
+	Gui Add, Text, x10 y+20 cwhite h20 +0x200 , Mode2:
+	Gui Add, DropDownList, x+13  w190 Disabled vmenuChoice2 gsubmit_all2,
 	menuChoice_TT := "Pick Mode for botit to run"
 	Gui Font, Bold s10
-	Gui, Add , Picture, x250 y100 w45 h45  vState2  gSubRoutine2, Gui\StartBotit.png
+	Gui, Add , Picture, x290 y100 w45 h45  vState2 +BackgroundTrans gSubRoutine2, Gui\StartBotit.png
 	State2_TT := "Start Botit After Window | Mode | Difficulty Picked"
-	Gui, Add , Picture, x252 y100  w45 h45 E0x200 vState3   gSubRoutine2, Gui\StartBotit.png
+	Gui, Add , Picture, x+2 y100  w45 h45 E0x200 vState3   gSubRoutine2, Gui\StartBotit.png
 	State3_TT := "Kill Running Script"
 	GoSub, Toggle_Switch2
 	
-	Gui, Add , Picture, x+2 y100 w45 h45  vState0  gSubRoutine1, Gui\StopBotit.png
+	Gui, Add , Picture, x340 y100 w45 h45  vState0  +BackgroundTrans gSubRoutine1, Gui\StopBotit.png
 	State0_TT := "Pause Botit"
-	Gui, Add , Picture, x300 y100  w45 h45 E0x200 vState1  gSubRoutine1, Gui\StopBotit.png
+	Gui, Add , Picture, x+2 y100  w45 h45 E0x200 vState1 +BackgroundTrans  gSubRoutine1, Gui\StopBotit.png
 	State1_TT := "Release Paused Botit"
 	GoSub, Toggle_Switch
 	
-	Gui Add, Picture, x+5  w45 h45 gRestart vResetTip, Gui\ResetBotit.png
+	Gui Add, Picture, x390 y100  w45 h45 gRestart vResetTip +BackgroundTrans, Gui\ResetBotit.png
 	ResetTip_TT := "Restart Botit"
-	Gui Add, Text, x10 y+45 cwhite h20, More Options:
+	Gui Add, Text, x10 y+145 cwhite h20, More Options:
 	;Gui Add,Button,x10 y+10 gtest1 , test
 	
-	Gui Add, Picture, x20 y300 w45 h45 gButtonBotitRND vBotitRNDTip, Gui\BotitProc.png
+	Gui Add, Picture, x30 y400 w45 h45 gButtonBotitRND vBotitRNDTip, Gui\BotitProc.png
 	BotitRNDTip_TT := "Allow snap with Auto import to script Running \img\random\"
-	Gui Add, Picture, x+50 y300 w60 h60 gButtonInstaller vInstallerTip, Gui\SetupBotit.png
+	Gui Add, Text,x0 y+10 cwhite center h20 w100 , BotitRND
+	Gui Add, Picture, x+20 y400 w60 h60 gButtonInstaller vInstallerTip, Gui\SetupBotit.png
 	InstallerTip_TT := "Call Botit Image Installer GUI"
-	Gui Add, Picture, x+50 y322 w42 h42 gHelpMenu vHelpTip, Gui\Botit Help.png
-	HelpTip_TT := "Open Help GUI with Q&A and Gifs"
-	Gui Add, Picture, x+10 y320 w50 h50 gSettingsMenu vSettingTip, Gui\SettingsBotit.png
-	SettingTip_TT := "Open Botit Settings GUI Allow change Control|Sleeps|Scan Modes"
-	Gui Add, Picture, x+10 y320 w48 h48 gDiscord vDiscordtip, Gui\discordlogo.png
-	Discordtip_TT := "Open a Discord Invite to Botit Server"
-	Gui Add, Text, x10 y350 cwhite h20 , BotitRND
-	Gui Add, Text, x+30 cwhite h20 , IMG Installer
+	Gui Add, Text, x100 y455 cwhite center h20 w100 , Image Tool
 	
-	Gui Add, Picture, x240 y170 w150 h130 vBoxTip , Gui\BotitBox.png
-	Gui Add, Progress, vMyProgress x1 y380 w399 cB2AF52 h20  -Smooth 
+	Gui Add, Picture, x+30 y400 w42 h42 +BackgroundTrans gHelpMenu vHelpTip, Gui\Botit Help.png
+	HelpTip_TT := "Open Help GUI with Q&A and Gifs"
+	
+	Gui Add, Picture, x+20 y400 w50 h50 gSettingsMenu vSettingTip +BackgroundTrans, Gui\SettingsBotit.png
+	SettingTip_TT := "Open Botit Settings GUI Allow change Control|Sleeps|Scan Modes"
+	Gui Add, Picture, x+20 y400 w48 h48 gDiscord vDiscordtip +BackgroundTrans, Gui\discordlogo.png
+	Discordtip_TT := "Open a Discord Invite to Botit Server"
+	Gui Add, Text, x232 y455 cwhite center h20  , Help
+	Gui Add, Text, x+25 cwhite h20 , Settings
+	Gui Add, Text, x+15 cwhite h20 , Discord
+	
+	Gui Add, Picture, x280 y160 w150 h210 vBoxTip +BackgroundTrans, Gui\BotitBox.png
+	Gui Add, Progress, vMyProgress x1 y480 w449 cB2AF52 h20  -Smooth 
 	MyProgress_TT := "Botit Scan Info Bar. Show Image|Case Scanned. Show Image Found and Timers"
-	Gui Add, Text, x10 y382 w80 h20 cBlack +BackgroundTrans vBotittext , ;image/routine
+	Gui Add, Text, x10 y482 w80 h23 cBlack +BackgroundTrans vBotittext , image scan
+	GuiControl,  +Redraw, Botittext
 	Gui Font
-	Gui Add, Text, x+10 y383 w300 h20 cBlack  vBotittext2 +BackgroundTrans, ;found image
+	Gui Add, Text, x+15 y483 w330 h20 cBlack  vBotittext2 +BackgroundTrans, found image info
+	GuiControl,  +Redraw, Botittext2
 	Gui Font, Bold s10
-	Gui Add, Text, x278 y170 h20  cFBEAEB +BackgroundTrans +0x200 vBox , Info Panel:
-	Gui Add, Text, cFBEAEB x245 y+5 w140 h20 center +BackgroundTrans vBotittext5,
-	Gui Add, Text, cFBEAEB x255 y+5 w120 h20 center +BackgroundTrans vBotittext3, ;difficulty
-	Gui Add, Text, cFBEAEB   y+5 w120 h20  center +BackgroundTrans vBotittext4, ;sleeping
-	Gui Show, w400 h400, Botit Blank v1.0.0
+	Gui Add, Text, x280 y160 w150 h20  cFBEAEB center +BackgroundTrans +0x200 vBox , Info Panel:
+	Gui Add, Text, cFBEAEB x280 y+5 w150 h20 center +BackgroundTrans vBotittext5, ;info1
+	Gui Add, Text, cFBEAEB  y+5 w150 h20 center +BackgroundTrans vBotittext3, ;difficulty
+	Gui Add, Text, cFBEAEB   y+5 w150 h20  center +BackgroundTrans vBotittext4, ;sleeping
+
+
+	Gui Add, Text, cFBEAEB   y+60 w150 h20  c00474a49 center +BackgroundTrans vBotittTime, ;TimeRunning
+	Gui Add, Text, cFBEAEB   y+10 w150 h20  c00474a49 center +BackgroundTrans vBotitExtra, ;Extra Data
+	Gui Add, Picture, x0 y390 w450 h2  , Gui\Backgroundmanager.png ;local image
+
+	Gui Add, Picture, x10 y200 w250 h2  , Gui\Backgroundmanager.png ;local image
+	Gui Add, Picture, x10 y+80 w252 h2  , Gui\Backgroundmanager.png ;local image
+	Gui Add, Picture, x10 y200 w2 h80  , Gui\Backgroundmanager.png ;local image
+	Gui Add, Picture, x260 y200 w2 h83  , Gui\Backgroundmanager.png ;local image
+
+	Gui Add, Text, x120 y210 cwhite h20 +BackgroundTrans, Developer:
+	Gui Font, Bold s12
+	Gui Add, Text, x85 y+10 cwhite h20 w160 center +BackgroundTrans, %buildername%
+	Gui Add, Picture, x20 y207 w70 h-1 +BackgroundTrans , Gui\DeveloperIcon.png ;local image
+
+	Gui Show, w450 h500, %botname% v%botver%
 	Menu, Tray, Icon, Gui\favicon.png
 	
 	hCurs:=DllCall("LoadCursor","UInt",NULL,"Int",32649,"UInt") ;IDC_HAND 
 	OnMessage(0x200,"WM_MOUSEMOVE")
 	GetCordsPixels()
 	
-}	
+}
+
 return
 
+guiiniread()
+{
+	global targetwindow
+	IniRead,MemberBerriesini,Botit ini/Settings.ini,Botit Settings,MemberBerries
+	{
+		targetwindow := MemberBerriesini
+	}
+	IfEqual MemberBerriesini ,ERROR
+	{
+		targetwindow := "Grab & left Click" ;Window name	
+	}
 
 
-	SettingsMenu:
-	Gui, Settings:New,
-	Gui, Settings:Default
-	Gui New,
-	Gui Add, Picture, x320 y10 w32 h32 gbuttonClosegui vcloseSettingsmenu, Gui\Botit Exit.png
-	closeSettingsmenu_TT := "Destroy Settings Menu" 
-	Gui Add, Picture, x150 y15 w60 h60 vsettingslogo , Gui\SettingsBotit.png
-	settingslogo_TT := "LOGO Settings Menu" 
+	global SleepAmountA
+	IniRead,SleepAmountAini,Botit ini/Settings.ini,Botit Settings,SleepAmountA
+	{
+		SleepAmountA := SleepAmountAini
+	}
+	IfEqual SleepAmountAini ,ERROR
+	{
+		SleepAmountA := 110	
+	}
+
+	global SleepAmountB
+	IniRead,SleepAmountBini,Botit ini/Settings.ini,Botit Settings,SleepAmountB
+	{
+
+		SleepAmountB := SleepAmountBini
+	}
+	IfEqual SleepAmountBini ,ERROR
+	{
+		SleepAmountB := 215	
+	}
+
+	global SleepAmountC
+	IniRead,SleepAmountCini,Botit ini/Settings.ini,Botit Settings,SleepAmountC
+	{
+
+		SleepAmountC := SleepAmountCini
+
+	}
+	IfEqual SleepAmountCini ,ERROR
+	{
+		SleepAmountC := 2750	
+	}
+
+
+	global SleepAmountD
+	IniRead,SleepAmountDini,Botit ini/Settings.ini,Botit Settings,SleepAmountD
+	{
+		SleepAmountD := SleepAmountDini
+	}
+	IfEqual SleepAmountDini ,ERROR
+	{
+		SleepAmountD := 3750	
+	}
 	
-	Gui, Color, 24292E
-	Gui Font, Bold s10
-	Gui Add, Text, x15 y+20  h20 +0x200 cwhite, Random Sleep Before Click:
-	Gui, Add, Edit, x+20  w50 h20 VSleepAmountA gsubmit_all3, %SleepAmountA%
-	SleepAmountA_TT := "Set Random Sleep BEFORE Scan A value 1000=1 sec"
-	Gui, Add, Edit, x+20  w50 h20 VSleepAmountB gsubmit_all3, %SleepAmountB%
-	SleepAmountB_TT := "Set Random Sleep BEFORE Scan B value 1000=1 sec"
+	global Controlchoice
+	IniRead,controlPickini,Botit ini/Settings.ini,Botit Settings,ControlPick
+	{
+		
+		Controlchoice := controlPickini
+		if (controlPickini="Auto-Mirror")
+		{
+			;msgbox,%Controlchoice%
+			GuiControl,, controller1, 1
+			GuiControl,, controller2, 0
+			GuiControl,, controller3, 0
+		}
+		if (controlPickini="PC/Emulator")
+		{
+			;msgbox,%Controlchoice%
+			GuiControl,, controller1, 0
+			GuiControl,, controller2, 1
+			GuiControl,, controller3, 0
+		}
+		if (controlPickini="HumanMouse")
+		{
+			;msgbox,%Controlchoice%
+			GuiControl,, controller1, 0
+			GuiControl,, controller2, 0
+			GuiControl,, controller3, 1
+		}
+		
+	}
+	IfEqual controlPickini ,ERROR
+	{
+		Controlchoice = Auto-Mirror
+	}
+
+	global Scanchoice
+	IniRead,ScanPickini,Botit ini/Settings.ini,Botit Settings,ScanPick
+	{
+		
+		Scanchoice := ScanPickini
+
+		if (ScanPickini="GrayScale")
+		{
+			;msgbox,%Controlchoice%
+			GuiControl,, RndScan1, 1
+			GuiControl,, RndScan2, 0
+			
+		}
+		else 
+		{
+			;msgbox,%Controlchoice%
+			GuiControl,, RndScan1, 0
+			GuiControl,, RndScan2, 1
+			
+		}
+		
+	}
+
+	IfEqual ScanPickini ,ERROR
+	{
+		Scanchoice = GrayScale
+		
+	}
+
+	global bioGate
+	IniRead,BioGate,Botit ini/Settings.ini,Botit Settings,biobreaker
+	{
+		
+		
+
+		if (BioGate="1")
+		{
+			;msgbox,%Controlchoice%
+			GuiControl,, biobrk1, 1
+			
+			
+		}
+		else 
+		{
+			;msgbox,%Controlchoice%
+			GuiControl,, biobrk1, 0
+			
+			
+		}
+		
+	}
+
+	IfEqual ScanPickini ,ERROR
+	{
+		Scanchoice = GrayScale
+		
+	}
+
+}
+
+
+controllerpick:
+flowmode=% A_GuiControl
+if(flowmode="controller1")
+{
+	GuiControl,, controller1, 1
+	GuiControl,, controller2, 0
+	GuiControl,, controller3, 0
+}
+if(flowmode="controller2")
+{
+	GuiControl,, controller1, 0
+	GuiControl,, controller2, 1
+	GuiControl,, controller3, 0
+}
+if(flowmode="controller3")
+{
+	GuiControl,, controller1, 0
+	GuiControl,, controller2, 0
+	GuiControl,, controller3, 1
+}
+;Gui, Submit, NoHide
+;msgbox,%flowmode%
+return
+
+rndscanpick:
+flowmode=% A_GuiControl
+if(flowmode="RndScan1")
+{
+	GuiControl,, RndScan1, 1
+	GuiControl,, RndScan2, 0
+
+}
+if(flowmode="RndScan2")
+{
+	GuiControl,, RndScan1, 0
+	GuiControl,, RndScan2, 1
+
+}
+
+return
+
+SettingsMenu:
+;msgbox,%testgate%
+Gui, Settings:New,
+Gui, Settings:Default
+Gui New,
+Gui Add, Picture, x320 y10 w32 h32 gbuttonClosegui vcloseSettingsmenu, Gui\Botit Exit.png
+closeSettingsmenu_TT := "Destroy Settings Menu" 
+Gui Add, Picture, x150 y15 w48 h-1 vsettingslogo , Gui\SettingsBotit.png
+settingslogo_TT := "LOGO Settings Menu" 
+	
+Gui, Color, 24292E
+
+Gui Font, Bold s12
+Gui Add, Text, x80 y+15  h30 +0x200 cwhite,Sleep Before Scan
+Gui Add, Picture, x+20   w30 h-1 +BackgroundTrans, Gui\picture.png
+Gui Font, Bold s10
+Gui Add, Text, x45 y+15  h20 +0x200 cwhite, Random Range:
+Gui, Add, Edit, x+20  w50 h20 VSleepAmountA gsubmit_all3, %SleepAmountA%
+SleepAmountA_TT := "Set Random Sleep BEFORE Scan A value 1000=1 sec"
+Gui, Add, Edit, x+20  w50 h20 VSleepAmountB gsubmit_all3, %SleepAmountB%
+SleepAmountB_TT := "Set Random Sleep BEFORE Scan B value 1000=1 sec"
+
+Gui Font, Bold s12
+Gui Add, Text, x80 y+15  h30 +0x200 cwhite,Sleep After Click
+Gui Add, Picture, x+20   w30 h-1 +BackgroundTrans, Gui\touch.png
 ;Gui Add, Text, x15 y155  h20 +0x200, 1 second = 1000
-	Gui Font, Bold s10
-	Gui Add, Text, x15 y+10  h20 +0x200 cwhite, Random Sleep After click:
-	Gui, Add, Edit, x+35  w50 h20 VSleepAmountC gsubmit_all3, %SleepAmountC%
-	SleepAmountC_TT := "Set Random Sleep AFTER Click C value 1000=1 sec"
-	Gui, Add, Edit, x+20  w50 h20 VSleepAmountD gsubmit_all3, %SleepAmountD%
-	SleepAmountD_TT := "Set Random Sleep AFTER Click D value 1000=1 sec"
-	Gui Add, Text, x110 y+15  h20 +0x200 cwhite, Set Controller Mode
-	Gui Add, DropDownList, x120 y+10 w120 vControlchoice gsubmit_all3, %controller1%  ;### control SDL2 with post msg VS ControlClick
-	Controlchoice_TT := "Pick How to control the target Botit Mirror | Emulators | PC Games " 
-	Gui Add, Text,x100 y+10  h20 +0x200 cwhite, Set BotitRND Scan Mode
-	Gui Add, DropDownList, x120 y+10 w120 vScanchoice gsubmit_all3, %controller2%
-	Scanchoice_TT := "Pick Mode to Scan With BotitRND " 
-	Gui Add, Picture, x140 y+15 w60 h60 vSaveTip gButtonSave, Gui\save.png
-	SaveTip_TT := "Save Options" 
-	gui -SysMenu
-	Gui Show, center ,BotIt Settings
-	return
+Gui Font, Bold s10
+Gui Add, Text, x45 y+15  h20 +0x200 cwhite, Random Range:
+Gui, Add, Edit, x+15  w50 h20 VSleepAmountC gsubmit_all3, %SleepAmountC%
+SleepAmountC_TT := "Set Random Sleep AFTER Click C value 1000=1 sec"
+Gui, Add, Edit, x+15  w50 h20 VSleepAmountD gsubmit_all3, %SleepAmountD%
+SleepAmountD_TT := "Set Random Sleep AFTER Click D value 1000=1 sec"
+Gui Add, Text, x40 y+15  h20 +0x200 c0098ff8d, Value in Milliseconds 1000 is 1 second
+Gui Add, Picture, x0 y+10 w360 h2  , Gui\Backgroundmanager.png ;local image
+
+Gui Font, Bold s12
+Gui Add, Text, x90 y+15  h30 +0x200 cwhite, Set Click Mode
+Gui Add, Picture, x+20   w30 h-1 +BackgroundTrans, Gui\touch.png
+Gui Font, Bold s10
+Gui, Add, Checkbox,x60 y+10 Checked gcontrollerpick vcontroller1,
+Gui, Add, Checkbox,x+85 vcontroller2 gcontrollerpick,
+Gui, Add, Checkbox,x+80  vcontroller3 gcontrollerpick,
+Gui Add, Picture, x20   w40 h-1 +BackgroundTrans, Gui\androidEmu.png
+Gui Add, Picture, x+10   w40 h-1 +BackgroundTrans, Gui\chrome (1).png
+Gui Add, Picture, x+30   w40 h-1 vbsicon +BackgroundTrans, Gui\bluestacks.png
+GuiControl,  +Redraw, bsicon
+Gui Add, Picture, x+10   w40 h-1 vnoxicon +BackgroundTrans, Gui\Nox_App_Player_Icon.png
+GuiControl,  +Redraw, noxicon
+Gui Add, Picture, x+50   w40 h-1  +BackgroundTrans, Gui\mouse.png
+Gui Add, Picture, x0 y+10 w360 h2  , Gui\Backgroundmanager.png ;local image
+;Gui Add, DropDownList, x120 y+10 w120 vControlchoice gsubmit_all3, %controller1%  ;### control SDL2 with post msg VS ControlClick
+;Controlchoice_TT := "Pick How to control the target Botit Mirror | Emulators | PC Games " 
+
+Gui Font, Bold s12
+Gui Add, Text,x60 y+10  h30 +0x200 cwhite, BotitRND Scan Mode
+Gui Add, Picture, x+20   w30 h-1 +BackgroundTrans, Gui\BotitProc.png
+Gui Font, Bold s10
+Gui Add, Picture, x90 y+10   w40 h-1 +BackgroundTrans, Gui\rnd1.png
+Gui, Add, Checkbox,x+10 Checked vRndScan1 grndscanpick,
+Gui Add, Picture, x+30   w40 h-1 +BackgroundTrans, Gui\rnd2.png
+Gui, Add, Checkbox,x+10 vRndScan2 grndscanpick,
+
+Gui Font, Bold s12
+Gui Add, Picture, x0 y+30 w360 h2  , Gui\Backgroundmanager.png ;local image
+Gui Add, Text,x60 y+10  h30 +0x200 cwhite, BioBreaker Setting
+Gui Add, Picture, x+20   w30 h-1 +BackgroundTrans, Gui\coffee-time.png
+Gui Font, Bold s10
+Gui, Add, Checkbox,x160 y+10 vbiobrk1 cwhite Checked ,On
+Gui Add, Picture, x0 y+10 w360 h2  , Gui\Backgroundmanager.png ;local image
+;Gui Add, DropDownList, x120 y+10 w120 vScanchoice gsubmit_all3, %controller2%
+;Scanchoice_TT := "Pick Mode to Scan With BotitRND " 
+Gui Add, Picture, x150 y+15 w48 h-1 vSaveTip gButtonSave, Gui\save.png
+SaveTip_TT := "Save Options" 
+gui -SysMenu
+guiiniread()
+Gui Show, center w360,BotIt Settings
+return
 	
-	HelpMenu:
+HelpMenu:
 	Gui New
 	Gui Add, Picture, x280 y10 w32 h32 gbuttonClosegui vclosehelp, Gui\Botit Exit.png
 	closehelp_TT := "Destroy Help Menu" 
@@ -278,7 +475,7 @@ return
 	
 	ControllerHelp:
 	
-	url := "https://raw.githubusercontent.com/DizzyduckAR/BotIt/master/Info%20Images/BotitControllers.png"
+	url := "https://raw.githubusercontent.com/DizzyduckAR/BotitAHK/master/Info%20Images/BotitControllers.png"
 	Gui, Margin, 20, 20
 	Gui New, +HwndhWndGifAnim
 	
@@ -291,7 +488,7 @@ return
 	
 	BotitrndHelp:
 	
-	url := "https://raw.githubusercontent.com/DizzyduckAR/BotIt/master/Info%20Images/suoZOlhh0d.gif"
+	url := "https://raw.githubusercontent.com/DizzyduckAR/BotitAHK/master/Info%20Images/suoZOlhh0d.gif"
 	Gui, Margin, 20, 20
 	Gui New, +HwndhWndGifAnim
 	
@@ -304,7 +501,7 @@ return
 	
 	InstallerHelp:
 	
-	url := "https://raw.githubusercontent.com/DizzyduckAR/BotIt/master/Info%20Images/Installer.gif"
+	url := "https://raw.githubusercontent.com/DizzyduckAR/BotitAHK/master/Info%20Images/Installer.gif"
 	Gui, Margin, 20, 20
 	Gui New, +HwndhWndGifAnim
 	
@@ -322,7 +519,7 @@ return
 	
 	ZoomChecker:
 	
-	url := "https://raw.githubusercontent.com/DizzyduckAR/BotIt/master/Info%20Images/ZoomLevel.jpg"
+	url := "https://raw.githubusercontent.com/DizzyduckAR/BotitAHK/master/Info%20Images/ZoomLevel.jpg"
 	Gui, Margin, 20, 20
 	Gui New, +HwndhWndGifAnim
 	
@@ -335,7 +532,7 @@ return
 	
 	GrabHelp:
 	
-	url := "https://raw.githubusercontent.com/DizzyduckAR/BotIt/master/Info%20Images/BotitGrab.gif"
+	url := "https://raw.githubusercontent.com/DizzyduckAR/BotitAHK/master/Info%20Images/BotitGrab.gif"
 	Gui, Margin, 20, 20
 	Gui New, +HwndhWndGifAnim
 	

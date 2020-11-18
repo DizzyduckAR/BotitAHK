@@ -37,15 +37,18 @@ Gui, Color, fbfbfb
 ;sidebars
 
 ;Gui Font, Bold s16,Bangers
-
+;settings build import
+IniRead,discord,Botit ini\Build.ini,Botit Build,discord
+IniRead,youtube,Botit ini\Build.ini,Botit Build,youtube
+IniRead,website,Botit ini\Build.ini,Botit Build,website
 
 ;Top Header
 Gui Add, Picture, x0 y0 w800 h70 , Gui\ManagerHeader.png ;local image
 Gui Add, Text, x0 y00 w800  c434343 center BackgroundTrans , Botit Image Tool
-Gui Add, Picture, x10 y5 w60 h-1 +BackgroundTrans vdiscord, Gui\discordlogo.png ;local image
-Gui Add, Picture, x+25 y8 w55 h-1 +BackgroundTrans vYoutube, Gui\utube.png ;local image
-Gui Add, Picture, x650 y8 w55 h-1 +BackgroundTrans, Gui\patreon.png ;local image
-Gui Add, Picture, x+25 y8 w55 h-1 +BackgroundTrans, Gui\internet.png ;local image
+Gui Add, Picture, x10 y5 w60 h-1 +BackgroundTrans gdiscord, Gui\discordlogo.png ;local image
+Gui Add, Picture, x+25 y8 w55 h-1 +BackgroundTrans gyoutube, Gui\utube.png ;local image
+Gui Add, Picture, x650 y8 w55 h-1 +BackgroundTrans gpatr, Gui\patreon.png ;local image
+Gui Add, Picture, x+25 y8 w55 h-1 +BackgroundTrans gwebs, Gui\internet.png ;local image
 
 Gui Add, Picture, x0 y250 w165 h400  , Gui\ManagerSideMenu.png ;local image
 ;Main Window Mode Bar
@@ -241,7 +244,21 @@ imgbuilder:
 }
 return
 
+discord:
+run,%discord%
+return
 
+youtube:
+run,%youtube%
+return
+
+patr:
+run,https://www.patreon.com/AutoMirror
+return
+
+webs:
+run,%website%
+return
 
 
 GetCords:

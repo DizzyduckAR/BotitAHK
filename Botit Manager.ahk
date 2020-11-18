@@ -31,16 +31,20 @@ IfExist,Gui\favicon.png
 ;DllCall( "AddFontResource", Str,"Gui\Bangers-Regular.ttf" ) 
 ;SendMessage,  0x1D,,,, ahk_id 0xFFFF ; Broadcast the change
 
+;settings build import
+IniRead,discord,Botit ini\Build.ini,Botit Build,discord
+IniRead,youtube,Botit ini\Build.ini,Botit Build,youtube
+IniRead,website,Botit ini\Build.ini,Botit Build,website
 
 
 Gui, Color, fbfbfb 
 Gui Font, Bold s10
 ;Top Header
 Gui Add, Picture, x0 y0 w800 h70 , Gui\ManagerHeader.png ;local image
-Gui Add, Picture, x10 y5 w60 h-1 +BackgroundTrans, Gui\discordlogo.png ;local image
-Gui Add, Picture, x+25 y8 w55 h-1 +BackgroundTrans, Gui\utube.png ;local image
-Gui Add, Picture, x650 y8 w55 h-1 +BackgroundTrans, Gui\patreon.png ;local image
-Gui Add, Picture, x+25 y8 w55 h-1 +BackgroundTrans, Gui\internet.png ;local image
+Gui Add, Picture, x10 y5 w60 h-1 +BackgroundTrans gdiscord, Gui\discordlogo.png ;local image
+Gui Add, Picture, x+25 y8 w55 h-1 +BackgroundTrans gyoutube, Gui\utube.png ;local image
+Gui Add, Picture, x650 y8 w55 h-1 +BackgroundTrans gpatr, Gui\patreon.png ;local image
+Gui Add, Picture, x+25 y8 w55 h-1 +BackgroundTrans gwebs, Gui\internet.png ;local image
 Gui Font, Bold s26
 Gui Add, Text, x0 y18 w800  c434343 center BackgroundTrans , Botit Developer Tool
 ;Side Menu'sss
@@ -153,7 +157,7 @@ GuiControl,Hide ,SSMpixeladd
 
 Gui Add, Text, x460 y487 w120 h30 vSSMbuildtxt BackgroundTrans c282c31 center, Build
 Gui Add, Picture, x460 y485 w120 h30 vSSMbg2, Gui\ManagerHeader.png ;local image
-Gui Add, Picture,x490 y+10 w60 h-1 vSSMnuildicon  +BackgroundTrans, Gui\lego.png ;local image
+Gui Add, Picture,x490 y+10 w60 h-1 vSSMnuildicon gSettingsMenu  +BackgroundTrans, Gui\lego.png ;local image
 
 ;hide
 GuiControl,Hide ,SSMbuildtxt
@@ -185,6 +189,23 @@ ExitApp
 
 
 ;labels
+
+discord:
+run,%discord%
+return
+
+youtube:
+run,%youtube%
+return
+
+patr:
+run,https://www.patreon.com/AutoMirror
+return
+
+webs:
+run,%website%
+return
+
 EditMode:
 {
   
@@ -1196,6 +1217,137 @@ DeleteData:
 }
 Return
 
+boticon:
+Thread, NoTimers
+FileSelectFile, iconPath,,%A_ScriptDir%
+Thread, NoTimers, false
+GuiControl, -Redraw, iconimg
+GuiControl,,iconimg,%iconPath%
+GuiControl,  +Redraw, iconimg
+;msgbox,%OutputVar%
+return
+
+Devicon:
+Thread, NoTimers
+FileSelectFile, DeviconPath,,%A_ScriptDir%
+Thread, NoTimers, false
+GuiControl, -Redraw, devicon
+GuiControl,,devicon,%DeviconPath%
+GuiControl,  +Redraw, devicon
+return
+
+BotBuild:
+
+GuiControlGet, data1,, Botnameedit
+GuiControlGet, data2,, Botnameedit2
+GuiControlGet, data3,, Botnameedit3
+GuiControlGet, data4,, Botnameedit4
+GuiControlGet, data5,, Botnameedit5
+GuiControlGet, data6,, Botnameedit6
+GuiControlGet, data7,, WinsizeW2
+GuiControlGet, data8,, WindsizeH2
+;msgbox,%data7% %data8%
+FileCreateDir, Output\%data1%
+FileCopyDir, Gui, Output\%data1%\Gui,1
+FileCopy, %iconPath%,  Output\%data1%\Gui\game2.png,1
+FileCopy, %iconPath%,  Output\%data1%\Gui\favicon.png,1
+FileCopy, %DeviconPath%,  Output\%data1%\Gui\DeveloperIcon.png,1
+FileCopyDir, Botit Functions, Output\%data1%\Botit Functions,1
+FileCopyDir, Core, Output\%data1%\Core,1
+FileCopyDir, Image installer, Output\%data1%\Image installer,1
+FileCopyDir, img, Output\%data1%\img,1
+FileCreateDir, Output\%data1%\img\Random
+FileCreateDir, Output\%data1%\Botit ini
+
+FileCopy, Bot Blank.ahk,  Output\%data1%\%data1%.ahk,1
+FileCopy, ImageTool.ahk,  Output\%data1%\ImageTool.ahk,1
+FileCopy, Bot Blank.exe,  Output\%data1%\%data1%.exe,1
+FileCopy, Bot Blank.exe,  Output\%data1%\ImageTool.exe,1
+
+FileCopy, Botit ini\Botit.ini,  Output\%data1%\Botit ini\Botit.ini,1
+FileCopy, Botit ini\ImageXY.ini,  Output\%data1%\Botit ini\ImageXY.ini,1
+FileCopy, Botit ini\Build.ini,  Output\%data1%\Botit ini\Build.ini,1
+FileCopy, Botit ini\Installer.ini,  Output\%data1%\Botit ini\Installer.ini,1
+
+;IniRead,botname,Botit ini\Build.ini,Botit Build,botname
+IniWrite,%data1%,Output\%data1%\Botit ini\Build.ini,Botit Build,botname
+IniWrite,%data2%,Output\%data1%\Botit ini\Build.ini,Botit Build,buildername
+IniWrite,%data3%,Output\%data1%\Botit ini\Build.ini,Botit Build,botver
+IniWrite,%data4%,Output\%data1%\Botit ini\Build.ini,Botit Build,discord
+IniWrite,%data5%,Output\%data1%\Botit ini\Build.ini,Botit Build,youtube
+IniWrite,%data6%,Output\%data1%\Botit ini\Build.ini,Botit Build,website
+
+IniWrite,%data7%,Output\%data1%\Botit ini\Build.ini,Botit Build,autocropW
+IniWrite,%data8%,Output\%data1%\Botit ini\Build.ini,Botit Build,autocropH
+IniWrite,%data7%,Output\%data1%\Botit ini\Build.ini,Botit Build,autocropW2
+IniWrite,%data8%,Output\%data1%\Botit ini\Build.ini,Botit Build,autocropH2
+;FileCreateDir, \Output\%Botnameedit%
+
+
+return
+
+SettingsMenu:
+{
+  Gui, Settings:New,
+  Gui, Settings:Default
+  Gui New,
+  Gui Add, Picture, x320 y10 w32 h32 gbuttonClosegui vcloseSettingsmenu, Gui\Botit Exit.png
+  closeSettingsmenu_TT := "Destroy Settings Menu" 
+  Gui Add, Picture, x150 y15 w48 h-1 vsettingslogo , Gui\lego.png
+  settingslogo_TT := "LOGO Settings Menu" 
+    
+  Gui, Color, 24292E
+
+  Gui Font, Bold s12
+  Gui Add, Text, x40 y+15  h30 +0x200 cwhite,Bot Icon
+  Gui Add, Picture, x+20   w24 h-1 +BackgroundTrans vappiconpick gBoticon, Gui\pages.png
+  
+  Gui Add, Text, x+40  h30 +0x200 cwhite,Dev Icon
+  Gui Add, Picture, x+20   w24 h-1 +BackgroundTrans vappiconpick2 gDevicon, Gui\pages.png
+  DeviconPath:="Gui\DeveloperIcon.png"
+  iconPath:="Gui\game2.png"
+  Gui Add, Picture, x60 y+10 w64 h-1 viconimg, %iconPath%
+  Gui Add, Picture, x+90  w64 h-1 vdevicon, %DeviconPath%
+  
+  Gui Font, Bold s10
+  Gui Add, Text, x40 y+25  h20 +0x200 cwhite, Bot Name:
+  Gui, Add, Edit, x+20  w180 h20 VBotnameedit ,
+  Gui Add, Text, x40 y+20  h20 +0x200 cwhite, Developer Name:
+  Gui, Add, Edit, x+20  w130 h20 VBotnameedit2 ,
+  Gui Add, Text, x40 y+20  h20 +0x200 cwhite, Bot Version:
+  Gui, Add, Edit, x+20  w130 h20 VBotnameedit3 ,1.0.0
+  Gui Add, Text, x40 y+20  h20 +0x200 cwhite, Discord Link:
+  Gui, Add, Edit, x+20  w160 h20 VBotnameedit4 ,https://discord.gg/ggRCXS2
+  Gui Add, Text, x40 y+20  h20 +0x200 cwhite, Youtube Link:
+  Gui, Add, Edit, x+20  w160 h20 VBotnameedit5 ,https://www.youtube.com/channel/UC5OzmTUVUxZAPTRJwpwHCYg
+  Gui Add, Text, x40 y+20  h20 +0x200 cwhite, WebSite Link:
+  Gui, Add, Edit, x+20  w160 h20 VBotnameedit6 ,https://botit-project.web.app
+ ; Botnameedit_TT := "because a friend told me every Bot needs a name"
+  ;Gui, Add, Edit, x20 y+10 w50 h20 VSleepAmountB , %SleepAmountB%
+  SleepAmountB_TT := "Set Random Sleep BEFORE Scan B value 1000=1 sec"
+  Gui Add, Picture, x0 y+20 w360 h2  , Gui\Backgroundmanager.png ;local image
+  Gui Font, Bold s12
+  Gui Add, Text, x80 y+15  h30 +0x200 cwhite,AutoCrop Settings
+  Gui Add, Picture, x+20   w30 h-1 +BackgroundTrans, Gui\auto.png
+  ;Gui Add, Text, x15 y155  h20 +0x200, 1 second = 1000
+  Gui Font, Bold s10
+  Gui Add, Text, x45 y+15  h20 +0x200 cwhite, Window Size:
+  Gui, Add, Edit, x+15  w50 h20 vWinsizeW2 ,554
+
+  Gui, Add, Edit, x+15  w50 h20 vWindsizeH2 ,994
+
+  Gui Add, Picture, x+20   w30 h-1 +BackgroundTrans, Gui\graphic.png
+  Gui Add, Picture, x0 y+10 w360 h2  , Gui\Backgroundmanager.png ;local image
+  ;Gui Add, DropDownList, x120 y+10 w120 vScanchoice gsubmit_all3, %controller2%
+  ;Scanchoice_TT := "Pick Mode to Scan With BotitRND " 
+  Gui Add, Picture, x160 y+15 w48 h-1 vSaveTip gBotBuild , Gui\save.png
+  SaveTip_TT := "Save Options" 
+  gui -SysMenu
+  ;guiiniread()
+  Gui Show, center w360,BotIt Build Menu
+}
+return
+
 ;Functions
 BotitScreenshot(Nameimg)
 {
@@ -1635,8 +1787,17 @@ ObjectRider(KeyName)
 	Gdip_Shutdown(pToken)
   
 }
+
+
+Builddata()
+{
+
+}
 return
 
 ;Includes
 #Include %A_ScriptDir%\Core\Gdip_All.ahk
 #Include %A_ScriptDir%\Core\Clipper.ahk
+
+
+F8::ExitApp
