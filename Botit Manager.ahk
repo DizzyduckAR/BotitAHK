@@ -27,157 +27,158 @@ IfExist,Gui\favicon.png
 {
 	Menu, Tray, Icon, Gui\favicon.png
 }
-
-;DllCall( "AddFontResource", Str,"Gui\Bangers-Regular.ttf" ) 
-;SendMessage,  0x1D,,,, ahk_id 0xFFFF ; Broadcast the change
-
-;settings build import
-IniRead,discord,Botit ini\Build.ini,Botit Build,discord
-IniRead,youtube,Botit ini\Build.ini,Botit Build,youtube
-IniRead,website,Botit ini\Build.ini,Botit Build,website
-
-
-Gui, Color, fbfbfb 
-Gui Font, Bold s10
-;Top Header
-Gui Add, Picture, x0 y0 w800 h70 , Gui\ManagerHeader.png ;local image
-Gui Add, Picture, x10 y5 w60 h-1 +BackgroundTrans gdiscord, Gui\discordlogo.png ;local image
-Gui Add, Picture, x+25 y8 w55 h-1 +BackgroundTrans gyoutube, Gui\utube.png ;local image
-Gui Add, Picture, x650 y8 w55 h-1 +BackgroundTrans gpatr, Gui\patreon.png ;local image
-Gui Add, Picture, x+25 y8 w55 h-1 +BackgroundTrans gwebs, Gui\internet.png ;local image
-Gui Font, Bold s26
-Gui Add, Text, x0 y18 w800  c434343 center BackgroundTrans , Botit Developer Tool
-;Side Menu'sss
-Gui Add, Picture, x0 y70 w200 h530 , Gui\ManagerSideMenu.png ;local image
-Gui Font, Bold s10
-Gui Add, Picture, x55 y80 w32 h-1 +BackgroundTrans , Gui\picture.png ;local image
-Gui Add, Picture, x+20 y78 w32 h-1 +BackgroundTrans , Gui\search.png ;local image
-Gui Add, Picture, x0 y115 w200 h2 , Gui\Backgroundmanager.png ;local image
-Gui Add, Picture, x95 y330 w32 h-1 +BackgroundTrans , Gui\file.png ;local image
-Gui, Add, Text, x10 y335 w80 h20 +BackgroundTrans cWhite,Image Tool
-Gui, Add, Text, x130 y335 w80 h20 +BackgroundTrans cWhite,Options
-Gui Add, Picture, x0 y320 w200 h2 , Gui\Backgroundmanager.png ;local image
-Gui Add, Picture, x0 y535 w200 h2 , Gui\Backgroundmanager.png ;local image
-
-Gui Add, Picture, x20 y550 w40 h-1 +BackgroundTrans vSSMsaveicon gSaveData, Gui\diskette.png ;local image
-Gui Add, Picture, x80 y550 w40 h-1 +BackgroundTrans vSSMremoveicon gDeleteData, Gui\delete.png ;local image
-Gui Add, Picture, x140 y550 w40 h-1 +BackgroundTrans vSSmcropicon gCropimage, Gui\crop.png ;local image
-
-;hide
-GuiControl,Hide ,SSMsaveicon
-GuiControl,Hide ,SSMremoveicon
-GuiControl,Hide ,SSmcropicon
-
-;not showing on load
-Gui Add, Picture, x15 y80 w32 h-1 +BackgroundTrans  vRighthnad, Gui\decree.png ;local image
-Gui Add, Picture, x150 y80 w32 h-1 +BackgroundTrans vLefthand , Gui\decreeleft.png ;local image
-Gui Add, Picture, x70 y130 w32 h-1 +BackgroundTrans vnotFound, Gui\not-found.png ;local image
-Gui Add, Text, x0 y+10 w180 h40 cWhite center BackgroundTrans vModeTextSide,
-
-Gui, Add, Text, x2 y200 w75 h20 +BackgroundTrans cWhite vSSMTol,Tolerance:
-Gui, Add, Edit, x+15  w30 h20 vSSMTolEdit ,55
-
-Gui, Add, Text, x2 y230 w80 h20 +BackgroundTrans cWhite vSSMMode,ScanMode:
-Gui, Add, ComboBox, x+10 y228 w90 VSSMModeCombo ,Window||Area|
-
-Gui, Add, Text, x2 y260 w80 h20 +BackgroundTrans cWhite vSSMScanClr,ScanColor:
-Gui, Add, ComboBox, x+10 y258 w100 vSSMScanClrCombo ,GrayScale||Color|
-
-
-Gui, Add, Text, x2 y290 w80 h20 +BackgroundTrans cWhite vSSMClick,Clicks:
-Gui, Add, ComboBox, x+10 y288 w100 vSSMClickCombo ,Click||No Click|
-
-
-Gui, Add, Text, x2 y375 w45 h20 +BackgroundTrans cWhite vSSMDEMO,Demo:
-Gui, Add, Edit, x50 y373 w100 h20 vSSMDEMOEdit,Image installer\Demo.png
-Gui Add, Picture, x160 y368 w28 h-1 +BackgroundTrans vSSMDemoFolder, Gui\pages.png ;local image
-
-
-Gui, Add, Text, x5 y468 w10 h14 +BackgroundTrans cWhite vSSMX1Text,X
-Gui, Add, Edit, x25 y465 w40 h20 vSSMx1
-Gui, Add, Text, x75 y468 w10 h14 +BackgroundTrans cWhite vSSMY1Text,Y
-Gui, Add, Edit, x95 y465 w40 h20 vSSmy1
-Gui, Add, Text, x5 y505 w17 h14 +BackgroundTrans cWhite vSSMX2Text,X2
-Gui, Add, Edit, x25 y505 w40 h20 vSSMx2
-Gui, Add, Text, x75 y505 w40 h14 +BackgroundTrans cWhite vSSMY2Text,Y2
-Gui, Add, Edit, x95 y505 w40 h20 vSSMy2
-Gui Add, Picture, x147 y475 w48 h-1 +BackgroundTrans VSSMSelect gGetCords, Gui\select.png ;local image
-Gui, Add, Text, x2 y440 w200 h20 center +BackgroundTrans cWhite vSSMMulti,Area Scan (window)
-Gui, Add, Edit, x2 y400 w190 h20 vSSMMultiEdit
-Sidecleaner()
-;Main Window Mode Bar
-Gui Add, Picture, x200 y140 w600 h35 , Gui\ManagerHeader.png ;local image
-Gui Font, Bold s16
-ModeText:="Pick Mode To Edit"
-Gui Add, Text, x200 y145 w600 h40 c434343 center BackgroundTrans vModeText, Pick Mode To Edit
-Gui, Show,w800 h600, %name% ; test gui size and name
-;Flows auto get data from user INI. then make images by modes and add them to the gui thaaadaaa
-#Include %A_ScriptDir%\Core\INIReader.ahk  ; Get Image Cords from INI
-OutputVar := IniGetKeys("Botit ini\Botit.ini", "Botit Modes" , "|")
-global Botitini:=StrSplit(OutputVar,"|")
-Loop % Botitini.MaxIndex()
 {
-	
-  global looper
-  looper := % Botitini[A_Index]
-  FlowRider(looper)
-  if (A_Index = 1)
+  ;DllCall( "AddFontResource", Str,"Gui\Bangers-Regular.ttf" ) 
+  ;SendMessage,  0x1D,,,, ahk_id 0xFFFF ; Broadcast the change
+
+  ;settings build import
+  IniRead,discord,Botit ini\Build.ini,Botit Build,discord
+  IniRead,youtube,Botit ini\Build.ini,Botit Build,youtube
+  IniRead,website,Botit ini\Build.ini,Botit Build,website
+
+
+  Gui, Color, fbfbfb 
+  Gui Font, Bold s10
+  ;Top Header
+  Gui Add, Picture, x0 y0 w800 h70 , Gui\ManagerHeader.png ;local image
+  Gui Add, Picture, x10 y5 w60 h-1 +BackgroundTrans gdiscord, Gui\discordlogo.png ;local image
+  Gui Add, Picture, x+25 y8 w55 h-1 +BackgroundTrans gyoutube, Gui\utube.png ;local image
+  Gui Add, Picture, x650 y8 w55 h-1 +BackgroundTrans gpatr, Gui\patreon.png ;local image
+  Gui Add, Picture, x+25 y8 w55 h-1 +BackgroundTrans gwebs, Gui\internet.png ;local image
+  Gui Font, Bold s26
+  Gui Add, Text, x0 y18 w800  c434343 center BackgroundTrans , Botit Developer Tool
+  ;Side Menu'sss
+  Gui Add, Picture, x0 y70 w200 h530 , Gui\ManagerSideMenu.png ;local image
+  Gui Font, Bold s10
+  Gui Add, Picture, x55 y80 w32 h-1 +BackgroundTrans , Gui\picture.png ;local image
+  Gui Add, Picture, x+20 y78 w32 h-1 +BackgroundTrans , Gui\search.png ;local image
+  Gui Add, Picture, x0 y115 w200 h2 , Gui\Backgroundmanager.png ;local image
+  Gui Add, Picture, x95 y330 w32 h-1 +BackgroundTrans , Gui\file.png ;local image
+  Gui, Add, Text, x10 y335 w80 h20 +BackgroundTrans cWhite,Image Tool
+  Gui, Add, Text, x130 y335 w80 h20 +BackgroundTrans cWhite,Options
+  Gui Add, Picture, x0 y320 w200 h2 , Gui\Backgroundmanager.png ;local image
+  Gui Add, Picture, x0 y535 w200 h2 , Gui\Backgroundmanager.png ;local image
+
+  Gui Add, Picture, x20 y550 w40 h-1 +BackgroundTrans vSSMsaveicon gSaveData, Gui\diskette.png ;local image
+  Gui Add, Picture, x80 y550 w40 h-1 +BackgroundTrans vSSMremoveicon gDeleteData, Gui\delete.png ;local image
+  Gui Add, Picture, x140 y550 w40 h-1 +BackgroundTrans vSSmcropicon gCropimage, Gui\crop.png ;local image
+
+  ;hide
+  GuiControl,Hide ,SSMsaveicon
+  GuiControl,Hide ,SSMremoveicon
+  GuiControl,Hide ,SSmcropicon
+
+  ;not showing on load
+  Gui Add, Picture, x15 y80 w32 h-1 +BackgroundTrans  vRighthnad, Gui\decree.png ;local image
+  Gui Add, Picture, x150 y80 w32 h-1 +BackgroundTrans vLefthand , Gui\decreeleft.png ;local image
+  Gui Add, Picture, x70 y130 w32 h-1 +BackgroundTrans vnotFound, Gui\not-found.png ;local image
+  Gui Add, Text, x0 y+10 w180 h40 cWhite center BackgroundTrans vModeTextSide,
+
+  Gui, Add, Text, x2 y200 w75 h20 +BackgroundTrans cWhite vSSMTol,Tolerance:
+  Gui, Add, Edit, x+15  w30 h20 vSSMTolEdit ,55
+
+  Gui, Add, Text, x2 y230 w80 h20 +BackgroundTrans cWhite vSSMMode,ScanMode:
+  Gui, Add, ComboBox, x+10 y228 w90 VSSMModeCombo ,Window||Area|
+
+  Gui, Add, Text, x2 y260 w80 h20 +BackgroundTrans cWhite vSSMScanClr,ScanColor:
+  Gui, Add, ComboBox, x+10 y258 w100 vSSMScanClrCombo ,GrayScale||Color|
+
+
+  Gui, Add, Text, x2 y290 w80 h20 +BackgroundTrans cWhite vSSMClick,Clicks:
+  Gui, Add, ComboBox, x+10 y288 w100 vSSMClickCombo ,Click||No Click|
+
+
+  Gui, Add, Text, x2 y375 w45 h20 +BackgroundTrans cWhite vSSMDEMO,Demo:
+  Gui, Add, Edit, x50 y373 w100 h20 vSSMDEMOEdit,Image installer\Demo.png
+  Gui Add, Picture, x160 y368 w28 h-1 +BackgroundTrans vSSMDemoFolder, Gui\pages.png ;local image
+
+
+  Gui, Add, Text, x5 y468 w10 h14 +BackgroundTrans cWhite vSSMX1Text,X
+  Gui, Add, Edit, x25 y465 w40 h20 vSSMx1
+  Gui, Add, Text, x75 y468 w10 h14 +BackgroundTrans cWhite vSSMY1Text,Y
+  Gui, Add, Edit, x95 y465 w40 h20 vSSmy1
+  Gui, Add, Text, x5 y505 w17 h14 +BackgroundTrans cWhite vSSMX2Text,X2
+  Gui, Add, Edit, x25 y505 w40 h20 vSSMx2
+  Gui, Add, Text, x75 y505 w40 h14 +BackgroundTrans cWhite vSSMY2Text,Y2
+  Gui, Add, Edit, x95 y505 w40 h20 vSSMy2
+  Gui Add, Picture, x147 y475 w48 h-1 +BackgroundTrans VSSMSelect gGetCords, Gui\select.png ;local image
+  Gui, Add, Text, x2 y440 w200 h20 center +BackgroundTrans cWhite vSSMMulti,Area Scan (window)
+  Gui, Add, Edit, x2 y400 w190 h20 vSSMMultiEdit
+  Sidecleaner()
+  ;Main Window Mode Bar
+  Gui Add, Picture, x200 y140 w600 h35 , Gui\ManagerHeader.png ;local image
+  Gui Font, Bold s16
+  ModeText:="Pick Mode To Edit"
+  Gui Add, Text, x200 y145 w600 h40 c434343 center BackgroundTrans vModeText, Pick Mode To Edit
+  Gui, Show,w800 h600, %name% ; test gui size and name
+  ;Flows auto get data from user INI. then make images by modes and add them to the gui thaaadaaa
+  #Include %A_ScriptDir%\Core\INIReader.ahk  ; Get Image Cords from INI
+  OutputVar := IniGetKeys("Botit ini\Botit.ini", "Botit Modes" , "|")
+  global Botitini:=StrSplit(OutputVar,"|")
+  Loop % Botitini.MaxIndex()
   {
     
-    Gui Add, Picture, x205 y72 w64 h-1 v%looper% gflow BackgroundTrans, Gui\Flow\%looper%.png
-    GuiControl,  Hide, %looper%
-    GuiControl,  +Redraw, %looper%
+    global looper
+    looper := % Botitini[A_Index]
+    FlowRider(looper)
+    if (A_Index = 1)
+    {
+      
+      Gui Add, Picture, x205 y72 w64 h-1 v%looper% gflow BackgroundTrans, Gui\Flow\%looper%.png
+      GuiControl,  Hide, %looper%
+      GuiControl,  +Redraw, %looper%
+      
+    }
+    Else
+    {
+      Gui Add, Picture, x+20 y72 w64 h-1 v%looper% gflow  BackgroundTrans, Gui\Flow\%looper%.png
+      GuiControl,  Hide, %looper%
+      GuiControl,  +Redraw, %looper%
+    }
     
   }
-  Else
+  Gui Add, Picture, x730 y80 w48 h48  +BackgroundTrans gAddmode, Gui\plus.png ;local image
+
+
+  ;Drag Buttom Icons
+  Gui Add, Text, x220 y487 w220 h30 vSSMaddmodetxt BackgroundTrans c282c31 center, Add To Mode
+  Gui Add, Picture, x220 y485 w220 h30 vSSMbg1, Gui\ManagerHeader.png ;local image
+  Gui Add, Picture, x220 y530 w60 h-1 vSSMimgeadd +BackgroundTrans gAddImage, Gui\photoadd.png ;local image
+  Gui Add, Picture, x+20 y530 w60 h-1 vSSMfuncadd +BackgroundTrans gfuncadd, Gui\code.png ;local image
+  Gui Add, Picture, x+20 y530 w60 h-1 vSSMpixeladd +BackgroundTrans, Gui\pixels.png ;local image
+
+  ;hide
+  GuiControl,Hide ,SSMaddmodetxt
+  GuiControl,Hide ,SSMbg1
+  GuiControl,Hide ,SSMimgeadd
+  GuiControl,Hide ,SSMfuncadd
+  GuiControl,Hide ,SSMpixeladd
+
+
+  Gui Add, Text, x460 y487 w120 h30 vSSMbuildtxt BackgroundTrans c282c31 center, Build
+  Gui Add, Picture, x460 y485 w120 h30 vSSMbg2, Gui\ManagerHeader.png ;local image
+  Gui Add, Picture,x490 y+10 w60 h-1 vSSMnuildicon gSettingsMenu  +BackgroundTrans, Gui\lego.png ;local image
+
+  ;hide
+  GuiControl,Hide ,SSMbuildtxt
+  GuiControl,Hide ,SSMbg2
+  GuiControl,Hide ,SSMnuildicon
+
+  Gui Add, Text, x600 y487 w180 h30 vSSMEditTxt BackgroundTrans c282c31 center, Edit | Delete
+  Gui Add, Picture, x600 y485 w180 h30 vSSMbg3, Gui\ManagerHeader.png ;local image
+  Gui Add, Picture,x610 y+10 w60 h-1 vSSMEditicon +BackgroundTrans gEditMode, Gui\hierarchy.png ;local image
+  Gui Add, Picture, x700 y530 w48 h48  vSSMdeleteicon gDeleteMode, Gui\Deletemode.png
+
+  ;hide
+  GuiControl,Hide ,SSMEditTxt 
+  GuiControl,Hide ,SSMbg3
+  GuiControl,Hide ,SSMEditicon
+  GuiControl,Hide ,SSMdeleteicon
+
+  IfExist,Gui\favicon.png
   {
-    Gui Add, Picture, x+20 y72 w64 h-1 v%looper% gflow  BackgroundTrans, Gui\Flow\%looper%.png
-    GuiControl,  Hide, %looper%
-    GuiControl,  +Redraw, %looper%
+    Menu, Tray, Icon, Gui\favicon.png
   }
-   
-}
-Gui Add, Picture, x730 y80 w48 h48  +BackgroundTrans gAddmode, Gui\plus.png ;local image
-
-
-;Drag Buttom Icons
-Gui Add, Text, x220 y487 w220 h30 vSSMaddmodetxt BackgroundTrans c282c31 center, Add To Mode
-Gui Add, Picture, x220 y485 w220 h30 vSSMbg1, Gui\ManagerHeader.png ;local image
-Gui Add, Picture, x220 y530 w60 h-1 vSSMimgeadd +BackgroundTrans gAddImage, Gui\photoadd.png ;local image
-Gui Add, Picture, x+20 y530 w60 h-1 vSSMfuncadd +BackgroundTrans gfuncadd, Gui\code.png ;local image
-Gui Add, Picture, x+20 y530 w60 h-1 vSSMpixeladd +BackgroundTrans, Gui\pixels.png ;local image
-
-;hide
-GuiControl,Hide ,SSMaddmodetxt
-GuiControl,Hide ,SSMbg1
-GuiControl,Hide ,SSMimgeadd
-GuiControl,Hide ,SSMfuncadd
-GuiControl,Hide ,SSMpixeladd
-
-
-Gui Add, Text, x460 y487 w120 h30 vSSMbuildtxt BackgroundTrans c282c31 center, Build
-Gui Add, Picture, x460 y485 w120 h30 vSSMbg2, Gui\ManagerHeader.png ;local image
-Gui Add, Picture,x490 y+10 w60 h-1 vSSMnuildicon gSettingsMenu  +BackgroundTrans, Gui\lego.png ;local image
-
-;hide
-GuiControl,Hide ,SSMbuildtxt
-GuiControl,Hide ,SSMbg2
-GuiControl,Hide ,SSMnuildicon
-
-Gui Add, Text, x600 y487 w180 h30 vSSMEditTxt BackgroundTrans c282c31 center, Edit | Delete
-Gui Add, Picture, x600 y485 w180 h30 vSSMbg3, Gui\ManagerHeader.png ;local image
-Gui Add, Picture,x610 y+10 w60 h-1 vSSMEditicon +BackgroundTrans gEditMode, Gui\hierarchy.png ;local image
-Gui Add, Picture, x700 y530 w48 h48  vSSMdeleteicon gDeleteMode, Gui\Deletemode.png
-
-;hide
-GuiControl,Hide ,SSMEditTxt 
-GuiControl,Hide ,SSMbg3
-GuiControl,Hide ,SSMEditicon
-GuiControl,Hide ,SSMdeleteicon
-
-IfExist,Gui\favicon.png
-{
-	Menu, Tray, Icon, Gui\favicon.png
 }
 Return ; stop point script will not run above this line unless called with button or function
 
@@ -285,10 +286,12 @@ SaveOrder:
 Return
 
 Cropimage:
-KeyWait, LButton, U
-BotitScreenshot(lowmode)
-SidecleanerFileds()
-SideMenu(lowmode)
+{
+  KeyWait, LButton, U
+  BotitScreenshot(lowmode)
+  SidecleanerFileds()
+  SideMenu(lowmode)
+}
 return
 
 Minidelete:
@@ -682,11 +685,13 @@ AddMode:
 return
 
 DeleteMode:
-exist:=Checkflows(flowmode)
-if exist
 {
-  IniDelete,Botit ini\Botit.ini,Botit Modes,%flowmode%
-  reload
+  exist:=Checkflows(flowmode)
+  if exist
+  {
+    IniDelete,Botit ini\Botit.ini,Botit Modes,%flowmode%
+    reload
+  }
 }
 return
 
@@ -846,7 +851,19 @@ SaveData:
 	
 	if (typeOBJ="Func")
 	{
-		return
+		GuiControlGet, Multicalls,,SSMMultiEdit
+    if (Multicalls="")
+    {
+      Liner:="Func"
+    }
+    Else
+    {
+      Liner:="Func|" Multicalls
+    }
+    
+    IniWrite,%Liner%,Botit ini\botit.ini,Botit Calls,%lowmode%
+    ;msgbox,%Liner%
+    return
 	}
 	
 	if (typeOBJ="Pixel")
@@ -1218,72 +1235,76 @@ DeleteData:
 Return
 
 boticon:
-Thread, NoTimers
-FileSelectFile, iconPath,,%A_ScriptDir%
-Thread, NoTimers, false
-GuiControl, -Redraw, iconimg
-GuiControl,,iconimg,%iconPath%
-GuiControl,  +Redraw, iconimg
-;msgbox,%OutputVar%
+{
+  Thread, NoTimers
+  FileSelectFile, iconPath,,%A_ScriptDir%
+  Thread, NoTimers, false
+  GuiControl, -Redraw, iconimg
+  GuiControl,,iconimg,%iconPath%
+  GuiControl,  +Redraw, iconimg
+  ;msgbox,%OutputVar%
+}
 return
 
 Devicon:
-Thread, NoTimers
-FileSelectFile, DeviconPath,,%A_ScriptDir%
-Thread, NoTimers, false
-GuiControl, -Redraw, devicon
-GuiControl,,devicon,%DeviconPath%
-GuiControl,  +Redraw, devicon
+{
+  Thread, NoTimers
+  FileSelectFile, DeviconPath,,%A_ScriptDir%
+  Thread, NoTimers, false
+  GuiControl, -Redraw, devicon
+  GuiControl,,devicon,%DeviconPath%
+  GuiControl,  +Redraw, devicon
+}
 return
 
 BotBuild:
+{
+  GuiControlGet, data1,, Botnameedit
+  GuiControlGet, data2,, Botnameedit2
+  GuiControlGet, data3,, Botnameedit3
+  GuiControlGet, data4,, Botnameedit4
+  GuiControlGet, data5,, Botnameedit5
+  GuiControlGet, data6,, Botnameedit6
+  GuiControlGet, data7,, WinsizeW2
+  GuiControlGet, data8,, WindsizeH2
+  ;msgbox,%data7% %data8%
+  FileCreateDir, Output\%data1%
+  FileCopyDir, Gui, Output\%data1%\Gui,1
+  FileCopy, %iconPath%,  Output\%data1%\Gui\game2.png,1
+  FileCopy, %iconPath%,  Output\%data1%\Gui\favicon.png,1
+  FileCopy, %DeviconPath%,  Output\%data1%\Gui\DeveloperIcon.png,1
+  FileCopyDir, Botit Functions, Output\%data1%\Botit Functions,1
+  FileCopyDir, Core, Output\%data1%\Core,1
+  FileCopyDir, Image installer, Output\%data1%\Image installer,1
+  FileCopyDir, img, Output\%data1%\img,1
+  FileCreateDir, Output\%data1%\img\Random
+  FileCreateDir, Output\%data1%\Botit ini
 
-GuiControlGet, data1,, Botnameedit
-GuiControlGet, data2,, Botnameedit2
-GuiControlGet, data3,, Botnameedit3
-GuiControlGet, data4,, Botnameedit4
-GuiControlGet, data5,, Botnameedit5
-GuiControlGet, data6,, Botnameedit6
-GuiControlGet, data7,, WinsizeW2
-GuiControlGet, data8,, WindsizeH2
-;msgbox,%data7% %data8%
-FileCreateDir, Output\%data1%
-FileCopyDir, Gui, Output\%data1%\Gui,1
-FileCopy, %iconPath%,  Output\%data1%\Gui\game2.png,1
-FileCopy, %iconPath%,  Output\%data1%\Gui\favicon.png,1
-FileCopy, %DeviconPath%,  Output\%data1%\Gui\DeveloperIcon.png,1
-FileCopyDir, Botit Functions, Output\%data1%\Botit Functions,1
-FileCopyDir, Core, Output\%data1%\Core,1
-FileCopyDir, Image installer, Output\%data1%\Image installer,1
-FileCopyDir, img, Output\%data1%\img,1
-FileCreateDir, Output\%data1%\img\Random
-FileCreateDir, Output\%data1%\Botit ini
+  FileCopy, Bot Blank.ahk,  Output\%data1%\%data1%.ahk,1
+  FileCopy, ImageTool.ahk,  Output\%data1%\ImageTool.ahk,1
+  FileCopy, Bot Blank.exe,  Output\%data1%\%data1%.exe,1
+  FileCopy, Bot Blank.exe,  Output\%data1%\ImageTool.exe,1
 
-FileCopy, Bot Blank.ahk,  Output\%data1%\%data1%.ahk,1
-FileCopy, ImageTool.ahk,  Output\%data1%\ImageTool.ahk,1
-FileCopy, Bot Blank.exe,  Output\%data1%\%data1%.exe,1
-FileCopy, Bot Blank.exe,  Output\%data1%\ImageTool.exe,1
+  FileCopy, Botit ini\Botit.ini,  Output\%data1%\Botit ini\Botit.ini,1
+  FileCopy, Botit ini\ImageXY.ini,  Output\%data1%\Botit ini\ImageXY.ini,1
+  FileCopy, Botit ini\Build.ini,  Output\%data1%\Botit ini\Build.ini,1
+  FileCopy, Botit ini\Installer.ini,  Output\%data1%\Botit ini\Installer.ini,1
 
-FileCopy, Botit ini\Botit.ini,  Output\%data1%\Botit ini\Botit.ini,1
-FileCopy, Botit ini\ImageXY.ini,  Output\%data1%\Botit ini\ImageXY.ini,1
-FileCopy, Botit ini\Build.ini,  Output\%data1%\Botit ini\Build.ini,1
-FileCopy, Botit ini\Installer.ini,  Output\%data1%\Botit ini\Installer.ini,1
+  ;IniRead,botname,Botit ini\Build.ini,Botit Build,botname
+  IniWrite,%data1%,Output\%data1%\Botit ini\Build.ini,Botit Build,botname
+  IniWrite,%data2%,Output\%data1%\Botit ini\Build.ini,Botit Build,buildername
+  IniWrite,%data3%,Output\%data1%\Botit ini\Build.ini,Botit Build,botver
+  IniWrite,%data4%,Output\%data1%\Botit ini\Build.ini,Botit Build,discord
+  IniWrite,%data5%,Output\%data1%\Botit ini\Build.ini,Botit Build,youtube
+  IniWrite,%data6%,Output\%data1%\Botit ini\Build.ini,Botit Build,website
 
-;IniRead,botname,Botit ini\Build.ini,Botit Build,botname
-IniWrite,%data1%,Output\%data1%\Botit ini\Build.ini,Botit Build,botname
-IniWrite,%data2%,Output\%data1%\Botit ini\Build.ini,Botit Build,buildername
-IniWrite,%data3%,Output\%data1%\Botit ini\Build.ini,Botit Build,botver
-IniWrite,%data4%,Output\%data1%\Botit ini\Build.ini,Botit Build,discord
-IniWrite,%data5%,Output\%data1%\Botit ini\Build.ini,Botit Build,youtube
-IniWrite,%data6%,Output\%data1%\Botit ini\Build.ini,Botit Build,website
-
-IniWrite,%data7%,Output\%data1%\Botit ini\Build.ini,Botit Build,autocropW
-IniWrite,%data8%,Output\%data1%\Botit ini\Build.ini,Botit Build,autocropH
-IniWrite,%data7%,Output\%data1%\Botit ini\Build.ini,Botit Build,autocropW2
-IniWrite,%data8%,Output\%data1%\Botit ini\Build.ini,Botit Build,autocropH2
-;FileCreateDir, \Output\%Botnameedit%
-
-
+  IniWrite,%data7%,Output\%data1%\Botit ini\Build.ini,Botit Build,autocropW
+  IniWrite,%data8%,Output\%data1%\Botit ini\Build.ini,Botit Build,autocropH
+  IniWrite,%data7%,Output\%data1%\Botit ini\Build.ini,Botit Build,autocropW2
+  IniWrite,%data8%,Output\%data1%\Botit ini\Build.ini,Botit Build,autocropH2
+  msgbox,,,Fin Check Output Folder,2
+  gui,Destroy
+}
 return
 
 SettingsMenu:
@@ -1533,7 +1554,33 @@ SideMenu(Keyname)
 	
 	if (typeOBJ="Func")
 	{
-		Return
+		Sidecleaner()
+    editmultiImages:=
+    Loop % Botitini.MaxIndex()
+    {
+          if (Botitini[A_Index]="Func")
+          {
+            ;editmultiImages:="Func"
+            ;msgbox,%editmultiImages%
+            Continue
+          }
+          funcbtnremove:= Botitini[A_Index]
+          if(A_Index=2)
+          {
+            ;MsgBox, 1
+            editmultiImages:=funcbtnremove
+          }
+          Else
+          {
+            editmultiImages:=editmultiImages "|" funcbtnremove
+          }
+          
+          ;msgbox,%editmultiImages%
+    }
+    GuiControl,,SSMMultiEdit,%editmultiImages%
+    GuiControl,  +Redraw, SSMMultiEdit
+    
+    Return
 	}
 	
 	if (typeOBJ="Pixel")
