@@ -5,6 +5,14 @@
 ;********* Buttons ;gui's
 guimain1:
 critical,off
+global Controlchoice
+global targetwindow
+global SleepAmountA
+global SleepAmountB
+global SleepAmountC
+global SleepAmountD
+global Scanchoice
+global bioGate
 guiiniread()
 IfnotExist,Botit ini\Settings.ini
 {
@@ -103,15 +111,15 @@ IfExist,Gui\favicon.png
 	Gui Add, DropDownList, x+13  w190 Disabled vmenuChoice2 gsubmit_all2,
 	menuChoice_TT := "Pick Mode for botit to run"
 	Gui Font, Bold s10
-	Gui, Add , Picture, x290 y100 w45 h45  vState2 +BackgroundTrans gSubRoutine2, Gui\StartBotit.png
+	Gui, Add , Picture, x290 y100 w45 h45  vState2  gSubRoutine2, Gui\StartBotit.png
 	State2_TT := "Start Botit After Window | Mode | Difficulty Picked"
-	Gui, Add , Picture, x+2 y100  w45 h45 E0x200 vState3   gSubRoutine2, Gui\StartBotit.png
+	Gui, Add , Picture, x292 y100  w45 h45 E0x200 vState3   gSubRoutine2, Gui\StartBotit.png
 	State3_TT := "Kill Running Script"
 	GoSub, Toggle_Switch2
 	
-	Gui, Add , Picture, x340 y100 w45 h45  vState0  +BackgroundTrans gSubRoutine1, Gui\StopBotit.png
+	Gui, Add , Picture, x+2 y100 w45 h45  vState0  gSubRoutine1, Gui\StopBotit.png
 	State0_TT := "Pause Botit"
-	Gui, Add , Picture, x+2 y100  w45 h45 E0x200 vState1 +BackgroundTrans  gSubRoutine1, Gui\StopBotit.png
+	Gui, Add , Picture, x340 y100  w45 h45 E0x200 vState1  gSubRoutine1, Gui\StopBotit.png
 	State1_TT := "Release Paused Botit"
 	GoSub, Toggle_Switch
 	
@@ -142,10 +150,10 @@ IfExist,Gui\favicon.png
 	Gui Add, Progress, vMyProgress x1 y480 w449 cB2AF52 h20  -Smooth 
 	MyProgress_TT := "Botit Scan Info Bar. Show Image|Case Scanned. Show Image Found and Timers"
 	Gui Add, Text, x10 y482 w80 h23 cBlack +BackgroundTrans vBotittext , image scan
-	GuiControl,  +Redraw, Botittext
+	;GuiControl,  +Redraw, Botittext
 	Gui Font
 	Gui Add, Text, x+15 y483 w330 h20 cBlack  vBotittext2 +BackgroundTrans, found image info
-	GuiControl,  +Redraw, Botittext2
+	;GuiControl,  +Redraw, Botittext2
 	Gui Font, Bold s10
 	Gui Add, Text, x280 y160 w150 h20  cFBEAEB center +BackgroundTrans +0x200 vBox , Info Panel:
 	Gui Add, Text, cFBEAEB x280 y+5 w150 h20 center +BackgroundTrans vBotittext5, ;info1
@@ -415,9 +423,9 @@ Gui, Add, Checkbox,x+80  vcontroller3 gcontrollerpick,
 Gui Add, Picture, x20   w40 h-1 +BackgroundTrans, Gui\androidEmu.png
 Gui Add, Picture, x+10   w40 h-1 +BackgroundTrans, Gui\chrome (1).png
 Gui Add, Picture, x+30   w40 h-1 vbsicon +BackgroundTrans, Gui\bluestacks.png
-GuiControl,  +Redraw, bsicon
+;GuiControl,  +Redraw, bsicon
 Gui Add, Picture, x+10   w40 h-1 vnoxicon +BackgroundTrans, Gui\Nox_App_Player_Icon.png
-GuiControl,  +Redraw, noxicon
+;GuiControl,  +Redraw, noxicon
 Gui Add, Picture, x+50   w40 h-1  +BackgroundTrans, Gui\mouse.png
 Gui Add, Picture, x0 y+10 w360 h2  , Gui\Backgroundmanager.png ;local image
 ;Gui Add, DropDownList, x120 y+10 w120 vControlchoice gsubmit_all3, %controller1%  ;### control SDL2 with post msg VS ControlClick
@@ -437,7 +445,7 @@ Gui Add, Picture, x0 y+30 w360 h2  , Gui\Backgroundmanager.png ;local image
 Gui Add, Text,x60 y+10  h30 +0x200 cwhite, BioBreaker Setting
 Gui Add, Picture, x+20   w30 h-1 +BackgroundTrans, Gui\coffee-time.png
 Gui Font, Bold s10
-Gui, Add, Checkbox,x160 y+10 vbiobrk1 cwhite Checked ,On
+Gui, Add, Checkbox,x160 y+10 vbiobrk1 cwhite Checked ,Active
 Gui Add, Picture, x0 y+10 w360 h2  , Gui\Backgroundmanager.png ;local image
 ;Gui Add, DropDownList, x120 y+10 w120 vScanchoice gsubmit_all3, %controller2%
 ;Scanchoice_TT := "Pick Mode to Scan With BotitRND " 

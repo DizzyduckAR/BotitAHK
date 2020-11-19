@@ -67,6 +67,7 @@ BotItScanner(Name,Diff,Mode,Colors,Clicks)
 	}
 	
 	;pre set clean for scanner
+	;msgbox, %SleepAmountC%   %SleepAmountD%
 	Random, SleepAmount, %SleepAmountC%, %SleepAmountD%
 	Gdip_DisposeImage(pBitmap)
 	Gdip_DeleteGraphics(BotitG)
@@ -392,8 +393,12 @@ BotItScanner(Name,Diff,Mode,Colors,Clicks)
 				{
 					
 					ControlClick, x%truex% y%truey%, %targetwindow%,,Left,1, NA
+					;msgbox,1
 					critical,Off
+					;msgbox,  %SleepAmount%
 					Sleep, %SleepAmount%
+					;msgbox,2
+					
 					return true
 				}
 				

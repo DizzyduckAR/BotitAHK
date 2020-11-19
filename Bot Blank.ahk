@@ -8,8 +8,8 @@
 ;{
 ;	msgbox,hello
 ;}
-global Controlchoice
-global targetwindow
+
+
 ;%Var%()
 SetWorkingDir %A_ScriptDir%
 #Include %A_ScriptDir%\Botit Functions\func.ahk
@@ -75,7 +75,7 @@ Loop % BotitINItoDDL.MaxIndex()
 				;msgbox,% BotitiniXYtmp3[2]  BotitiniXYtmp3[3]
 
 				BotItScanner(looper1,BotitiniXYtmp3[2],BotitiniXYtmp3[3],BotitiniXYtmp3[4],BotitiniXYtmp3[5])
-
+				;msgbox,out
 			}
 
 			if (BotitiniXYtmp3[1]="Func")
@@ -128,6 +128,7 @@ Loop % BotitINItoDDL.MaxIndex()
 
 
 }
+Return
 ;Test Window Capture
 if ( menuChoicetmp = "TestBGS")
 {	
