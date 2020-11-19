@@ -8,8 +8,8 @@
 ;{
 ;	msgbox,hello
 ;}
-
-
+global Controlchoice
+global targetwindow
 ;%Var%()
 SetWorkingDir %A_ScriptDir%
 #Include %A_ScriptDir%\Botit Functions\func.ahk
@@ -72,6 +72,8 @@ Loop % BotitINItoDDL.MaxIndex()
 			critical,On
 			if (BotitiniXYtmp3[1]="Image")
 			{
+				;msgbox,% BotitiniXYtmp3[2]  BotitiniXYtmp3[3]
+
 				BotItScanner(looper1,BotitiniXYtmp3[2],BotitiniXYtmp3[3],BotitiniXYtmp3[4],BotitiniXYtmp3[5])
 
 			}

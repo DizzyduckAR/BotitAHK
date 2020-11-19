@@ -28,7 +28,7 @@ BotItScanner(Name,Diff,Mode,Colors,Clicks)
 {
 	
 	
-	;msgbox, %Name%  %Diff%   %Mode%   %Colors%  %Clicks%
+	;msgbox, %Name%  %Diff%   %Mode%   %Colors%  %Clicks% %targetwindow%
 	if (Mode = "area")
 	{
 		IniRead,BotitiniXY,Botit ini\ImageXY.ini,Botit XY,%Name%
@@ -89,7 +89,7 @@ BotItScanner(Name,Diff,Mode,Colors,Clicks)
 	;**
 	if (Mode = "area")
 	{
-		
+		;msgbox,area
 		pBitmapBotitHay := Gdip_BitmapFromHWND(hwnd := WinExist("" targetwindow ""  )) ;user grabbed mirror/window name
 		pBitmapBotitHay := Gdip_CropImage(pBitmapBotitHay, tmpoX1, tmpoY1, tmpoX2, tmpoY2)
 		;pBitmapBotitHay := Gdip_BitmapFromHWNDCropped(hWnd, tmpoX1 "|" tmpoY1 "|" tmpoX2 "|" tmpoY2)
@@ -344,7 +344,7 @@ BotItScanner(Name,Diff,Mode,Colors,Clicks)
 		
 		if (result = 1)  ;if image found
 		{
-			
+			;msgbox,%result%
 			GuiControl,, MyProgress, +10	
 			;Time Tracker
 			Ti :=  QPX( False )
@@ -360,7 +360,7 @@ BotItScanner(Name,Diff,Mode,Colors,Clicks)
 				
 			}
 			
-			
+			;msgbox,%Controlchoice%
 			If Clicks = 1
 			{
 				if (Controlchoice = "Auto-Mirror")
