@@ -116,6 +116,8 @@ after you are done adding flows / images / testing and you happy with the output
 
 
 you can change the icon/builder logo
+Bot Name
+Developer Name
 links data / youtube ... 
 Auto crop settings (if you wanna let other users use your app or wanna auto settings on any other pc)
 
