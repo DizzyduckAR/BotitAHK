@@ -54,12 +54,18 @@ So let say you are a new user with 0 understanding in code. where do you start??
 
 ![Botit_Manager_OOlZ7LzQHU](https://user-images.githubusercontent.com/52171360/101281461-a8895180-37d7-11eb-8998-e0b6165e2530.png)
 
-Side menu hold data of the image correctly holding(if no image cropped yet it will show no image)
+Side menu hold data of the image correctly holding (if no image cropped yet it will show no image).
+
 Tol = how far the user image match vs the target. range is from 0-125 golden area is 40-75. each image need TOl or match will fail!
+
 Scan mode = allow user to pick how he wanna match the image. to the all window or just to the area image was cropped on. (botit will auto make the cords when you snap the    image)
+
 Scan Color = how you wanna match the image. Color will use full color (faster but less accurate timer- 0.018 / grayscale is a bit slower but very accurate timer- 0.024)
+
 Clicks = click or no click command
+
 demo = user screen area with the target area. used by image tool to point you on what you snapped (it will auto build the demo and path when you crop)
+
 area scan = allow you to re take the area of the image if you wanna make the area bigger or smaller.
 
 Dont forget to save per each object.
