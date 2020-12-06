@@ -46,3 +46,15 @@ So let say you are a new user with 0 understanding in code. where do you start??
 
 ![Botit_Manager_8qIdVmnsoE](https://user-images.githubusercontent.com/52171360/101281306-e6d24100-37d6-11eb-8d13-4dde015e93a7.png)  
 
+7)after you added the image names you want the image list will update. you can now pick the image or images and press "add image/s to mode" button. **image name can be anything but no spaces!
+
+8)the gui and mode will self update to the new data you added. **Scan order is the order you see on flow.
+
+9)botit manager is now showing the picked flow with the images connected to it. pressing on each object will open the data of the object.
+
+![Botit_Manager_OOlZ7LzQHU](https://user-images.githubusercontent.com/52171360/101281461-a8895180-37d7-11eb-8998-e0b6165e2530.png)
+
+Side menu hold data of the image correctly holding(if no image cropped yet it will show no image)
+Tol = how far the user image match vs the target. range is from 0-125 golden area is 40-75. each image need TOl or match will fail!
+Scan mode = allow user to pick how he wanna match the image. to the all window or just to the area image was cropped on. (botit will auto make the cords when you snap the    image)
+Scan Color = how you wanna match the image. Color will use full color (faster but less accurate timer- 0.018 / grayscale is a bit slower but very accurate timer- 0.024)
