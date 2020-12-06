@@ -3,6 +3,7 @@ holding a powerful and tiny image and pixel scanner with full background window 
 Self and auto calculation of any matched image with easy and clear control for each image and mode.
 
 Botit ahk allow the user to build fully working bots without the need to understand code.
+
 botit comes with:
 
 Botit - Main automation tool with gui and self settings.
