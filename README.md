@@ -81,5 +81,23 @@ After picking a flow and an image a new side menu will show up with the data of 
 
 ![ImageTool_i9EWl5r93i](https://user-images.githubusercontent.com/52171360/101281762-9f00e900-37d9-11eb-8a9a-117cc1310fcf.png)
 
+Afer picking a image we can Crop the image with botit tool. fallow the status tip to crop the area you want on the target.
 
+![ImageTool_cLOPX2qD6X](https://user-images.githubusercontent.com/52171360/101281817-133b8c80-37da-11eb-848b-8f9951a8d80f.png)
+
+after crop is done image tool will self update the data and add the area you took and the demo image of the area.
+it will self fill the scan area data and any other data needed.
+once image is cropped and you can see the new demo image you can test detect and click with:
+
+![ImageTool_asG3EeKTQ4](https://user-images.githubusercontent.com/52171360/101281864-54cc3780-37da-11eb-85f1-f146ee7b1760.png)
+
+data of the match is by what you saved on botit manager image settings. (tol , scan mode..)
+
+after image was taken you can start botit blank and it will find and click what you made. it can run for weeks.
+a video of the proc will be uploaded later on.
+botit fully understand ahk and you can hook function or write functions in ahk.
+
+function can use the image name you added from botit manager.
+one line image scan. override scan data on functions to allow more control.
+BotItScanner("Fail1",65,"area","G",0) ;img name "Fail1" tol - 65  scanmode - "Area"  scan color - "G"(grayscale)  click - "0" (no click)
 
