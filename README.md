@@ -107,3 +107,19 @@ function can use the image name you added from botit manager.
 one line image scan. override scan data on functions to allow more control.
 BotItScanner("Fail1",65,"area","G",0) ;img name "Fail1" tol - 65  scanmode - "Area"  scan color - "G"(grayscale)  click - "0" (no click)
 
+Build Bot:
+after you are done adding flows / images / testing and you happy with the output you can build a "clean" bot with more setting and data.
+
+
+![Botit_Manager_YXdATm4cQA](https://user-images.githubusercontent.com/52171360/101282124-c8227900-37db-11eb-81a9-713f11e8e88f.png)
+
+
+you can change the icon/builder logo
+links data / youtube ... 
+Auto crop settings (if you wanna let other users use your app or wanna auto settings on any other pc)
+
+saving the data will output a new folder with your bot and all the data you added freash and clean for deploy. (you can copy botit manager to the folder if you want to keep changing the bot. else it will have botit and image tool only)
+
+output size is 3.7mb other then the base 3.7mb you got your images and demo images. 
+images sit on bot root folder "img"
+demo images sit bot root folder "Image installer"
