@@ -63,5 +63,23 @@ demo = user screen area with the target area. used by image tool to point you on
 area scan = allow you to re take the area of the image if you wanna make the area bigger or smaller.
 
 Dont forget to save per each object.
+**Any image you add will need tol to be set. it will not work if you dont save tol per the image.
+
+after we added flow and images to our botit manager and saved our image scan data we can now start botit and use the image tool. (for testing and hot reload)
+when we open botit blank 
+
+![Bot_Blank_tgzcS9NfOB](https://user-images.githubusercontent.com/52171360/101281703-3c0f5200-37d9-11eb-9298-792872abe803.png)
+
+we can see our new flow is already waiting for us on the menu.
+we can start the test with botit or use the image tool to crop and then start botit.
+for this tut we gonna open image tool first.
+
+![ImageTool_f8RCVzThPo](https://user-images.githubusercontent.com/52171360/101281740-72e56800-37d9-11eb-97a9-94ffeae2fc90.png)
+
+Image tool will auto show user the flow he added and the objects connected to the flow.
+After picking a flow and an image a new side menu will show up with the data of the image.
+
+![ImageTool_i9EWl5r93i](https://user-images.githubusercontent.com/52171360/101281762-9f00e900-37d9-11eb-8a9a-117cc1310fcf.png)
+
 
 
