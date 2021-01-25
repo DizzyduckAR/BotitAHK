@@ -813,6 +813,7 @@ SaveData:
       ScanM:="C"
     }
     GuiControlGet, Clickchk,,SSMClickCombo
+    ;msgbox,%Clickchk%
     if (Clickchk="Click")
     {
       Clickchk:="1"

@@ -236,18 +236,25 @@ if IsPaused
 {
 		Pause off
 		IsPaused := false
+		RandomActiveGate := 0
+		
+		SetTimer, RandomTicker, off
 		GuiControl,, PauseButton, Pause
 }
 	else
 		SetTimer, Pause, 10
-	return
+		return
+return
 
 Pause:
+{
 	SetTimer, Pause, off
 	IsPaused := true
 	GuiControl,, PauseButton, Unpause
 	Pause, on
 	return
+}
+	
 	
 ButtonSave:
 Gui, Submit, NoHide
