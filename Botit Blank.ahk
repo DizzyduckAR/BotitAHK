@@ -53,13 +53,62 @@ Gui, Submit, NoHide
 ;Read Images INI
 GetCords()
 
-if (targetwindow = "Grab & left Click" )
+; if (targetwindow = "Grab & left Click" )
+; {
+; 		MsgBox,262144, No selection, No WIndow Targeted! Grab Mirror
+; 		return
+; }
+if (targetwindow = "" ) or (targetwindow = "Grab & left Click" )
+      {
+          MsgBox,262144,No Target, No Window target! Grab Mirror,1
+          settimer,Titletracker,20
+          sleep,150
+          KeyWait, LButton, D
+          {
+            MouseGetPos,,,guideUnderCursor
+            WinGetTitle, targetwindow, ahk_id %guideUnderCursor%
+            ;targetwindow := ahk_id %guideUnderCursor%
+            ;msgbox, name: %targetwindow%
+            ;global namer2
+            ;global Timore
+            
+            settimer,Titletracker,off
+            ToolTip,
+          
+          }
+          
+          ;msgbox, name: %targetwindow% W: %targetw%  H: %targeth%
+          WinGetPos,,, Wtest, Htest, %targetwindow%
+          if (Wtest>Htest)
+          {
+            IniRead,targetw,Botit ini\Build.ini,Botit Build,autocropW
+            IniRead,targeth,Botit ini\Build.ini,Botit Build,autocropH
+          }
+          Else
+          {
+            IniRead,targetw,Botit ini\Build.ini,Botit Build,autocropW2
+            IniRead,targeth,Botit ini\Build.ini,Botit Build,autocropH2
+          }
+          botitsizeguard(targetwindow,targetw,targeth)
+          globalsizegate=true
+          msgbox,,,Done Setting Size,1
+      }
+Else
 {
-		MsgBox,262144, No selection, No WIndow Targeted! Grab Mirror
-		return
+			WinGetPos,,, Wtest, Htest, %targetwindow%
+          if (Wtest>Htest)
+          {
+            IniRead,targetw,Botit ini\Build.ini,Botit Build,autocropW
+            IniRead,targeth,Botit ini\Build.ini,Botit Build,autocropH
+          }
+          Else
+          {
+            IniRead,targetw,Botit ini\Build.ini,Botit Build,autocropW2
+            IniRead,targeth,Botit ini\Build.ini,Botit Build,autocropH2
+          }
+          botitsizeguard(targetwindow,targetw,targeth)
+          globalsizegate=true
 }
-
-
 ;read user mode pick
 menuChoicetmp := menuChoice
 OutputVar := IniGetKeys("Botit ini\Botit.ini", "Botit Modes","|")
@@ -552,6 +601,48 @@ Return
 	
 	
 	
+botitsizeguard(targetname,targetw,targeth)
+{
+
+	if (A_ScreenDPI > 96)
+	{
+		MsgBox ,Error Detected System Zoom Level Above 100. Change System Zoom in Display Settings
+		Return true
+	}
 	
+	;window size
+	loop,10
+	{
+		
+		WinGetPos,,,cropWchk,cropHchk,%targetname%
+		
+		if (cropWchk=targetw) and (targeth=cropHchk)
+		{
+			;msgbox,done size
+			break
+		}
+
+		msgbox, Error Drag your client to the Right %cropWchk%  %cropHchk%
+		;WinMove, %targetname%, , , , %targetw%, %targeth%
+		;WinMaximize, %targetname%
+		;random,targetw2,10,%targetw%+100
+		;random,targeth2,10,50
+		;msgbox, %targetw2%   %targeth2%
+		;targetw2 := targetw+410
+		;targeth2 := targeth+150
+		;msgbox, %targetw2% %targeth%
+		;WinMove, %targetname%, , , , %targetw2%, %targeth%
+		;WinMove, %targetname%, , , , %targetw%, %targeth%
+		;WinMove, %targetname%, , , , %targetw2%, %targeth%
+		;WinMove, %targetname%, , , , %targetw%, %targeth%
+		;WinMove, %targetname%, , , , %targetw2%, %targeth%
+		
+		;WinRestore, %targetname%
+		sleep,150
+		WinMove, %targetname%, , , , %targetw%, %targeth%
+		sleep,30
+		
+	}
+}
 	
 	
