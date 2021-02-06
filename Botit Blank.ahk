@@ -14,12 +14,26 @@
 SetWorkingDir %A_ScriptDir%
 #Include %A_ScriptDir%\Botit Functions\func.ahk
 #Include %A_ScriptDir%\Core\INIReader.ahk  ; Get Image Cords from INI
-
+;global neutron := "skip"
 ;Settings detect
 
 
 
 #Include %A_ScriptDir%\Core\GUI.ahk
+global truex2 := 0
+global truey2 := 0
+
+#Include %A_ScriptDir%\Core\BackgroundScanner.ahk ; bundle the all tools to allow Scan "mode"
+#Include %A_ScriptDir%\Core\controlclick.ahk ; controller to window mouse and key
+#Include %A_ScriptDir%\Core\Gdip_All.ahk ; image edit tool
+#Include %A_ScriptDir%\Core\Gdip_ImageSearch.ahk  ; img scan funcs
+#Include %A_ScriptDir%\Core\RandomBezier.ahk ; human Mouse
+#Include %A_ScriptDir%\Core\AnimatedGifControl.ahk
+#Include %A_ScriptDir%\Core\Neutron.ahk
+;#include Core\Includer.ahk
+
+
+Random, SleepAmount, %SleepAmountA%, %SleepAmountB% ; Random sleep for image scanner
 
 ;GUI Call ************* 
 
@@ -85,6 +99,15 @@ Loop % BotitINItoDDL.MaxIndex()
 
 			}
 			
+			if (BotitiniXYtmp3[1]="Pixel")
+			{ 
+				;msgbox,% looper1  BotitiniXYtmp3[2]   BotitiniXYtmp3[3] BotitiniXYtmp3[4] BotitiniXYtmp3[5]
+				BotItPixel(looper1,BotitiniXYtmp3[2],BotitiniXYtmp3[3],BotitiniXYtmp3[4])
+				;neutronjswrap("statustext","innerHTML","" looper1,neutron)
+				;barstate +=2
+				;neutronjswrap("botststusbar","progbar",barstate "%",neutron)
+						
+			}
 			
 			critical,Off
 			GuiControl,, MyProgress, +10

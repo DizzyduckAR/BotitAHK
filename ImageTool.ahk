@@ -781,6 +781,9 @@ return
 autocrop:
 ;msgbox,%lowmode%
 {
+  
+  
+  
   if (targetwindow = "" )
   {
       MsgBox,262144,No Target, No Window target! Grab Mirror,1

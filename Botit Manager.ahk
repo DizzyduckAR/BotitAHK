@@ -20,8 +20,10 @@ SetMouseDelay -1
 #SingleInstance off
 #NoTrayIcon
 
+global globalsizegate:=False
+
 modepicked = 0
-name := "Botit Manager V0.1.1"
+name := "Botit Manager V0.3.1"
 
 IfExist,Gui\favicon.png
 {
@@ -92,6 +94,12 @@ IfExist,Gui\favicon.png
   Gui, Add, Edit, x50 y373 w100 h20 vSSMDEMOEdit,Image installer\Demo.png
   Gui Add, Picture, x160 y368 w28 h-1 +BackgroundTrans vSSMDemoFolder, Gui\pages.png ;local image
 
+  Gui, Add, Text, x2 y375 w80 h20 +BackgroundTrans cWhite vSSMDEMO2,Grab Pixel:
+  Gui Add, Picture, x100 y370 w36 h-1 +BackgroundTrans GPick vSSMDemoFolder2, Gui\pixelated.png ;local image
+  Gui, Add, Edit, x50 y410 w100 h20 vSSMMultiEdit2
+  GuiControl,Hide ,SSMDEMO2
+  GuiControl,Hide ,SSMDemoFolder2
+  GuiControl,Hide ,SSMMultiEdit2
 
   Gui, Add, Text, x5 y468 w10 h14 +BackgroundTrans cWhite vSSMX1Text,X
   Gui, Add, Edit, x25 y465 w40 h20 vSSMx1
@@ -145,7 +153,7 @@ IfExist,Gui\favicon.png
   Gui Add, Picture, x220 y485 w220 h30 vSSMbg1, Gui\ManagerHeader.png ;local image
   Gui Add, Picture, x220 y530 w60 h-1 vSSMimgeadd +BackgroundTrans gAddImage, Gui\photoadd.png ;local image
   Gui Add, Picture, x+20 y530 w60 h-1 vSSMfuncadd +BackgroundTrans gfuncadd, Gui\code.png ;local image
-  Gui Add, Picture, x+20 y530 w60 h-1 vSSMpixeladd +BackgroundTrans, Gui\pixels.png ;local image
+  Gui Add, Picture, x+20 y530 w60 h-1 vSSMpixeladd +BackgroundTrans gAddPixel, Gui\pixels.png ;local image
 
   ;hide
   GuiControl,Hide ,SSMaddmodetxt
@@ -713,6 +721,7 @@ GetCords2()
   GuiControl,,SSmy1, %tmpsnapY%
   GuiControl,,SSMx2, %BW2%
   GuiControl,,SSMy2, %BH2%
+  GuiControl,choose,SSMModeCombo,Area
 }
 
 flow:
@@ -869,7 +878,75 @@ SaveData:
 	
 	if (typeOBJ="Pixel")
 	{
-		return
+		;msgbox, pixel save
+    ;image data
+    GuiControlGet, Tol,,SSMTolEdit
+    GuiControlGet, Moder,,SSMModeCombo
+    if (Moder="Window")
+    {
+      Moder:="Single"
+    }
+    Else
+    {
+      Moder:="area"
+    }
+    
+    GuiControlGet, Clickchk,,SSMClickCombo
+    ;msgbox,%Clickchk%
+    if (Clickchk="Click")
+    {
+      Clickchk:="1"
+    }
+    Else
+    {
+      Clickchk:="0"
+    }
+    GuiControlGet, pixelcolor,,SSMMultiEdit2
+    ;bundle the call before write
+    Liner:="Pixel|" Tol "|" Moder "|" Clickchk "|" pixelcolor
+    ;msgbox, %Liner%
+    ;ini Write
+    IniWrite,%Liner%,Botit ini\Botit.ini,Botit Calls,%lowmode%
+
+    ;installer data
+    ;GuiControlGet, Demopath,,SSMDEMOEdit
+    ;GuiControlGet, Multicalls,,SSMMultiEdit2
+
+    ;Liner:="Pixel|" Demopath "|" Multicalls
+    ;IniWrite,%Liner%,Botit ini\Installer.ini,Botit Images,%lowmode%
+    ;msgbox, %Liner%
+    GuiControlGet, Moder,,SSMModeCombo
+
+    if (Moder="Window")
+    {
+      GuiControlGet, SSMx1,,SSMx1
+      GuiControlGet, SSmy1,,SSmy1
+      Liner:=SSMx1 "|" SSmy1
+      SSMx2 := ""
+      SSMy2 := ""
+      GuiControl,,SSMx2, %SSMx2%
+      GuiControl,,SSMy2, %SSMy2%
+      
+      ;GuiControlGet, SSMx2,,SSMx2
+      ;GuiControlGet, SSMy2,,SSMy2
+    }
+
+    if (Moder="Area")
+    {
+      GuiControlGet, SSMx1,,SSMx1
+      GuiControlGet, SSmy1,,SSmy1
+      GuiControlGet, SSMx2,,SSMx2
+      GuiControlGet, SSMy2,,SSMy2
+      Liner:=SSMx1 "|" SSmy1 "|" SSMx2 "|" SSMy2
+    }
+    
+
+    
+    IniWrite,%Liner%,Botit ini\ImageXY.ini,Botit XY,%lowmode%
+    ;msgbox, %Liner%
+    msgbox,0x40000,Saved,Finish Saving,0.7
+    
+    return
 	}
 }
 Return
@@ -910,6 +987,86 @@ AddImage:
 }
 return
 
+
+botitsizeguard(targetname,targetw,targeth)
+{
+
+	if (A_ScreenDPI > 96)
+	{
+		MsgBox ,Error Detected System Zoom Level Above 100. Change System Zoom in Display Settings
+		Return true
+	}
+	
+	;window size
+	loop,10
+	{
+		
+		WinGetPos,,,cropWchk,cropHchk,%targetname%
+		
+		if (cropWchk=targetw) and (targeth=cropHchk)
+		{
+			;msgbox,done size
+			break
+		}
+		msgbox, Error Drag your client to the Right %cropWchk%  %cropHchk%
+		;WinMove, %targetname%, , , , %targetw%, %targeth%
+		;WinMaximize, %targetname%
+		;random,targetw2,10,%targetw%+100
+		;random,targeth2,10,50
+		;msgbox, %targetw2%   %targeth2%
+		;targetw2 := targetw+410
+		;targeth2 := targeth+150
+		;msgbox, %targetw2% %targeth%
+		;WinMove, %targetname%, , , , %targetw2%, %targeth%
+		;WinMove, %targetname%, , , , %targetw%, %targeth%
+		;WinMove, %targetname%, , , , %targetw2%, %targeth%
+		;WinMove, %targetname%, , , , %targetw%, %targeth%
+		;WinMove, %targetname%, , , , %targetw2%, %targeth%
+		
+		;WinRestore, %targetname%
+		sleep,150
+		WinMove, %targetname%, , , , %targetw%, %targeth%
+		sleep,30
+		
+	}
+}
+
+
+AddPixel:
+{
+  Gui New,
+  Gui Add, Picture, x320 y10 w32 h32 gbuttonClosegui, Gui\Botit Exit.png
+
+  Gui, Color, 24292E
+  Gui Font, Bold s10
+  Gui Add,button ,x180 y70 gAddtoFlow , Add Pixel/s To Mode	
+  Gui, Add, ListView,x20 y20 w150 ReadOnly Sort vMultiimageView ,Name|Type
+  OutputVar := IniGetKeys("Botit ini\Botit.ini", "Botit Calls" , "|")
+  Botitini:=StrSplit(OutputVar,"|")
+  Loop % Botitini.MaxIndex()
+  {
+    looper := % Botitini[A_Index]
+
+    IniRead,Botitini2,Botit ini\Botit.ini,Botit Calls,%looper%
+    Botitini2:=StrSplit(Botitini2,"|")
+    Typelist:=Botitini2[1]
+    if (Typelist="Pixel")
+    {
+      
+      LV_Add("",looper,Typelist)
+      LV_ModifyCol()
+    }
+    
+  }
+
+    
+
+  Gui Add,button ,x30 y+20 gAddNewPix , Add New Pixel		
+  gui -SysMenu
+  gui +AlwaysOnTop
+  Gui Show, center ,Add Object to Flow
+}
+return
 
 AddtoFlow:
 {
@@ -1103,6 +1260,52 @@ Checkflows(NewMode)
 
 }
 
+
+AddNewPix:
+{
+  Gui +LastFound +OwnDialogs +AlwaysOnTop
+  InputBox, UserInput , Add Pixel, Please enter Pixel Name NO Spaces!., , 200, 150
+  if ErrorLevel
+      Return
+
+  OutputVar := IniGetKeys("Botit ini\Botit.ini", "Botit Calls" , "|")
+  Botitini:=StrSplit(OutputVar,"|")
+  Loop % Botitini.MaxIndex()
+  {
+    looper := % Botitini[A_Index]
+    if (UserInput=looper)
+    {
+      msgbox,Error,Error Name already in database
+      return
+    } 
+  }
+  ;bundle the call before write
+  Liner:="Pixel"
+  ;ini Write
+  IniWrite,%Liner%,Botit ini\Botit.ini,Botit Calls,%UserInput%
+  IniWrite,%Liner%,Botit ini\Installer.ini,Botit Images,%UserInput%
+  IniWrite,% "",Botit ini\ImageXY.ini,Botit XY,%UserInput%
+  LV_Delete()
+  OutputVar := IniGetKeys("Botit ini\Botit.ini", "Botit Calls" , "|")
+  Botitini:=StrSplit(OutputVar,"|")
+  Loop % Botitini.MaxIndex()
+  {
+    looper := % Botitini[A_Index]
+
+    IniRead,Botitini2,Botit ini\Botit.ini,Botit Calls,%looper%
+    Botitini2:=StrSplit(Botitini2,"|")
+    Typelist:=Botitini2[1]
+    if (Typelist="Pixel")
+    {
+      
+      LV_Add("",looper,Typelist)
+      LV_ModifyCol()
+    }
+    
+  }
+  msgbox,0x40000,Update,List has Been Updated,0.7
+}
+return
 AddNewImg:
 {
   Gui +LastFound +OwnDialogs +AlwaysOnTop
@@ -1354,9 +1557,9 @@ SettingsMenu:
   ;Gui Add, Text, x15 y155  h20 +0x200, 1 second = 1000
   Gui Font, Bold s10
   Gui Add, Text, x45 y+15  h20 +0x200 cwhite, Window Size:
-  Gui, Add, Edit, x+15  w50 h20 vWinsizeW2 ,554
+  Gui, Add, Edit, x+15  w50 h20 vWinsizeW2 ,960
 
-  Gui, Add, Edit, x+15  w50 h20 vWindsizeH2 ,994
+  Gui, Add, Edit, x+15  w50 h20 vWindsizeH2 ,540
 
   Gui Add, Picture, x+20   w30 h-1 +BackgroundTrans, Gui\graphic.png
   Gui Add, Picture, x0 y+10 w360 h2  , Gui\Backgroundmanager.png ;local image
@@ -1373,8 +1576,42 @@ return
 ;Functions
 BotitScreenshot(Nameimg)
 {
+	if (globalsizegate=false)
+  {
+      ;msgbox,1
+      msgbox,,,First Time Window Size Set,1
+      if (targetwindow = "" )
+    {
+        MsgBox,262144,No Target, No Window target! Grab Mirror,1
+        settimer,Titletracker,20
+        sleep,150
+        KeyWait, LButton, D
+        {
+          MouseGetPos,,,guideUnderCursor
+          WinGetTitle, targetwindow, ahk_id %guideUnderCursor%
+          ;targetwindow := ahk_id %guideUnderCursor%
+          ;msgbox, name: %targetwindow%
+          ;global namer2
+          ;global Timore
+          
+          settimer,Titletracker,off
+          ToolTip,
+        
+        }
+        IniRead,targetw,Botit ini\Build.ini,Botit Build,autocropW
+        IniRead,targeth,Botit ini\Build.ini,Botit Build,autocropH
+        ;msgbox, name: %targetwindow% W: %targetw%  H: %targeth%
+        botitsizeguard(targetwindow,targetw,targeth)
+        globalsizegate=true
+        msgbox,,,Done Setting Size,1
+    }
+  }
 	
-	Clipboard :=
+  
+  
+  
+  
+  Clipboard :=
 	ScreenCapture(location:="clipboard")
 	sleep, 100
 	clip1 := Gdip_CreateBitmapFromClipboard()
@@ -1486,16 +1723,27 @@ installerimagebuilder(name,title,x1,y1,x2,y2)
 }
 
 
+ConvertARGB(ARGB, Convert := 0)
+{
+    SetFormat, IntegerFast, Hex
+    RGB += ARGB
+    RGB := RGB & 0x00FFFFFF
+    if (Convert)
+        RGB := (RGB & 0xFF000000) | ((RGB & 0xFF0000) >> 16) | (RGB & 0x00FF00) | ((RGB & 0x0000FF) << 16)
+    return RGB
+}
+
 SideMenu(Keyname)
 {
 	GuiControl,Hide ,Righthnad
 	GuiControl,Hide ,Lefthand
-
+  Sidecleaner()
   
   GuiControl,,ModeTextSide,%Keyname%
 	IniRead,Botitini,Botit ini\Botit.ini,Botit Calls,%KeyName%
 	Botitini:=StrSplit(Botitini,"|")
 	typeOBJ:=Botitini[1]
+  
   
 	if (typeOBJ="Image")
 	{
@@ -1555,7 +1803,9 @@ SideMenu(Keyname)
 	
 	if (typeOBJ="Func")
 	{
-		Sidecleaner()
+		
+    
+    Sidecleaner()
     editmultiImages:=
     Loop % Botitini.MaxIndex()
     {
@@ -1586,7 +1836,75 @@ SideMenu(Keyname)
 	
 	if (typeOBJ="Pixel")
 	{
-		GuiControl,Show ,Lefthand
+		Sidecleaner()
+    GuiControl,Show ,Lefthand
+
+    GuiControl,show ,ModeTextSide
+    GuiControl,Show ,SSMMulti
+    GuiControl,Show ,SSMx1
+    GuiControl,Show ,SSMx2
+    GuiControl,Show ,SSmy1
+    GuiControl,Show ,SSMy2
+    GuiControl,Show ,SSMSelect
+    GuiControl,Show ,SSMX1Text
+    GuiControl,Show ,SSMY1Text
+    GuiControl,Show ,SSMX2Text
+    GuiControl,Show ,SSMY2Text
+    GuiControl,Show ,SSMTol
+    GuiControl,Show ,SSMTolEdit
+    GuiControl,Show ,SSMMode
+    GuiControl,Show ,SSMModeCombo
+    GuiControl,Show ,SSMClick
+    GuiControl,Show ,SSMClickCombo
+    GuiControl,Show ,SSMDEMO2
+    GuiControl,Show ,SSMDemoFolder2
+    GuiControl,Show ,SSMMultiEdit2
+
+    ;ImgFileName := "Gui\ManagerObjects\pixel.png"
+    
+    typeOBJ2:=Botitini[2]
+    GuiControl,,SSMTolEdit,%typeOBJ2%
+    typeOBJ3:=Botitini[3]
+    if (typeOBJ3="Single")
+    {
+      GuiControl,Choose,SSMModeCombo,|1
+    }
+    Else
+    {
+      GuiControl,Choose,SSMModeCombo,|2
+    }
+
+    typeOBJ5:=Botitini[5]
+    GuiControl,,SSMMultiEdit2,%typeOBJ5%
+    null := ""
+    
+    StringReplace, typeOBJ5, typeOBJ5,0x,%null%
+    CreatePixelBMP(typeOBJ5, "Gui\ManagerObjects\pixel.png" ) ; Example
+    GuiControl,Hide ,notFound
+    GuiControl, -Redraw, notFound
+    xcenter:=Round((230)/2)-Round(w1/2)
+    ImgFileName := "Gui\ManagerObjects\pixel.png"
+    w1 := 32
+    h1:= 32
+		GuiControl,,notFound, *w%w1% *h%h1% %ImgFileName%
+    GuiControl,,notFound, *w%w1% *h%h1% %ImgFileName%
+    GuiControl, Move,Gui\ManagerObjects\pixel.png,x%xcenter%
+    GuiControl, MoveDraw,*x%xcenter% %ImgFileName%
+		GuiControl,  +Redraw, notFound
+    IniRead,Botitini,Botit ini\ImageXY.ini,Botit XY,%KeyName%
+    Botitini:=StrSplit(Botitini,"|")
+    typeOBJ:=Botitini[1]
+    GuiControl,,SSMx1,%typeOBJ%
+    typeOBJ2:=Botitini[2]
+    GuiControl,,SSmy1,%typeOBJ2%
+
+    typeOBJ3:=Botitini[3]
+    GuiControl,,SSMx2,%typeOBJ3%
+    typeOBJ4:=Botitini[4]
+    GuiControl,,SSMy2,%typeOBJ4%
+  
+    return
+
 	}
 	
 	ImgFileName := "img\" Keyname "C.png"
@@ -1658,6 +1976,95 @@ SideMenu(Keyname)
   ;SSMX1Text|SSMY1Text|SSMX2Text|SSMY2Text
 }
 
+pixeltracker:
+{
+; CoordMode, mouse, Screen ; Coordinates are relative to the desktop (entire screen).
+; MouseGetPos, x_1, y_1, id_1, control_1
+
+; CoordMode, mouse, Window ; Synonymous with Relative and recommended for clarity.
+; MouseGetPos, x_2, y_2, id_2, control_2
+
+; CoordMode, mouse, Client ; Coordinates are relative to the active window's client area
+; MouseGetPos, x_3, y_3, id_3, control_3
+
+; ToolTip, Screen :`t`tx %x_1% y %y_1%`nWindow :`tx %x_2% y %y_2%`nClient :`t`tx %x_3% y %y_3%, % A_ScreenWidth-200, % A_ScreenHeight-200
+MouseGetPos, MouseX, MouseY
+PixelGetColor, color, %MouseX%, %MouseY%,ARGB
+
+CoordMode, mouse, Window ; Synonymous with Relative and recommended for clarity.
+MouseGetPos, x_2, y_2, id_2, control_2
+
+ToolTip, %Color% Right Click to pick   %x_2%  %y_2%
+GuiControl,,SSMMultiEdit2, %Color%
+GuiControl,,SSMx1, %x_2%
+GuiControl,,SSmy1, %y_2%
+SSMx2 := ""
+SSMy2 := ""
+GuiControl,,SSMx2, %SSMx2%
+GuiControl,,SSMy2, %SSMy2%
+
+}
+return
+
+Titletracker:
+MouseGetPos,,,guideUnderCursor
+WinGetTitle, targetwindow, ahk_id %guideUnderCursor%
+ToolTip, %targetwindow% left mouse Click on Title
+return
+
+Pick:
+GuiControl,choose,SSMModeCombo,window
+;GuiControl,,SSMModeCombo,
+if (targetwindow = "" )
+  {
+      MsgBox,262144,No Target, No Window target! Grab Mirror,1
+      settimer,Titletracker,20
+      sleep,150
+      KeyWait, LButton, D
+      {
+        MouseGetPos,,,guideUnderCursor
+        WinGetTitle, targetwindow, ahk_id %guideUnderCursor%
+        
+        ;global namer2
+        ;global Timore
+        
+        settimer,Titletracker,off
+        ToolTip,
+
+      
+      }
+  }
+;msgbox,%targetwindow%
+settimer,pixeltracker,100
+KeyWait, RButton, D
+{
+	;MsgBox % "ARGB is: "(argb_data := ARGB_FromRGB(0xAA,RGB))
+	Color:= ConvertARGB(Color) 
+	;test := ARGB_FromRGB(0xAA,Color)
+	;msgbox, %test%
+  StringReplace, Color2, Color,0x,%null%
+  CreatePixelBMP(Color2, "Gui\ManagerObjects\pixel.png" ) ; Example
+  GuiControl,Hide ,notFound
+  GuiControl, -Redraw, notFound
+  xcenter:=Round((230)/2)-Round(w1/2)
+  ImgFileName := "Gui\ManagerObjects\pixel.png"
+  w1 := 32
+  h1:= 32
+	GuiControl,,notFound, *w%w1% *h%h1% %ImgFileName%
+  GuiControl,,notFound, *w%w1% *h%h1% %ImgFileName%
+  GuiControl, Move,Gui\ManagerObjects\pixel.png,x%xcenter%
+  GuiControl, MoveDraw,*x%xcenter% %ImgFileName%
+	GuiControl,  +Redraw, notFound
+	
+
+	GuiControl,,SSMMultiEdit2, %Color%
+	;GuiControl,,SSMx1, %MouseX%
+  ;GuiControl,,SSmy1, %MouseY%
+	settimer,pixeltracker,off
+	ToolTip,
+  targetwindow := ""
+	Return
+}
 
 flowaddons()
 {
@@ -1720,7 +2127,18 @@ Sidecleaner()
   GuiControl,Hide ,SSMX2Text
   GuiControl,Hide ,SSMY2Text
 
-
+  GuiControl,Hide ,SSMDEMO2
+  GuiControl,Hide ,SSMDemoFolder2
+  GuiControl,Hide ,SSMMultiEdit2
+  GuiControl,Hide ,SSMTol
+  GuiControl,Hide ,SSMTolEdit
+  GuiControl,Hide ,SSMMode
+  GuiControl,Hide ,SSMModeCombo
+  GuiControl,Hide ,SSMClick
+  GuiControl,Hide ,SSMClickCombo
+  GuiControl,Hide ,SSMDEMO2
+  GuiControl,Hide ,SSMDemoFolder2
+  GuiControl,Hide ,SSMMultiEdit2
   
   ;SSMaddmodetxt  | 
 }
@@ -1738,6 +2156,20 @@ SidecleanerFileds()
   
 }
 
+CreatePixelBMP(C, Filename)
+{
+	BH := "424D3A0000000000000036000000280000000100000001000000"
+	. "01001800000000000400000000000000000000000000000000000000"
+	. SubStr(C, 5, 2) . SubStr(C, 3, 2) . SubStr(C, 1, 2) . "00"
+
+	File := FileOpen(Filename, "rw")
+
+	Loop, % StrLen(BH) // 2 {
+		File.WriteUChar("0x" . SubStr(BH, (2 * A_Index) - 1, 2))
+	}
+	
+	File.Close()
+}
 
 checkandbuildDUpe:
 {

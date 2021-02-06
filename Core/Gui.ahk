@@ -550,3 +550,19 @@ HelpMenu:
 	Gui Show, center ,Zoom Level
 	
 	return
+
+	BotItTest()
+{
+	ImageSearch_BotitBGSTest(targetwindow)
+	Exist:=BotItScanner("Botit1",55,"Single","G",1)
+	if Exist
+	{
+		msgbox,"Found Botit1 inside mirror"
+	}
+		
+	else
+	{
+		msgbox,"Error Botit1 Not Detected"
+	}
+	return
+}

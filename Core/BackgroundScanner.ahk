@@ -16,11 +16,14 @@
 global locker := 0
 global result
 
-
-ARGBtoRGB( ARGB ) {
-	VarSetCapacity( RGB,6,0 )
-	DllCall( "msvcrt.dll\sprintf", Str,RGB, Str,"%06X", UInt,ARGB<<8 )
-	Return "0x" RGB
+; Converts RGB with Alpha Channel to RGB
+ARGBtoRGB( ARGB )
+{
+	SetFormat, IntegerFast, hex
+	ARGB := ARGB & 0x00ffffff
+	ARGB .= “” ; Necessary due to the “fast” mode.
+	SetFormat, IntegerFast, d
+	return ARGB
 }
 
 ;our main image match system
@@ -50,6 +53,7 @@ BotItScanner(Name,Diff,Mode,Colors,Clicks)
 	
 	else
 	{
+		
 		IniRead,BotitiniXY,Botit ini\ImageXY.ini,Botit XY,%Name%
 		namer := "Botitini" Name
 		BotitiniXYtmp:=StrSplit(BotitiniXY,"|")
@@ -67,8 +71,9 @@ BotItScanner(Name,Diff,Mode,Colors,Clicks)
 	}
 	
 	;pre set clean for scanner
-	;msgbox, %SleepAmountC%   %SleepAmountD%
+	
 	Random, SleepAmount, %SleepAmountC%, %SleepAmountD%
+	
 	Gdip_DisposeImage(pBitmap)
 	Gdip_DeleteGraphics(BotitG)
 	Gdip_DisposeImage(pBitmapBotitHay)
@@ -421,11 +426,19 @@ BotItScanner(Name,Diff,Mode,Colors,Clicks)
 }
 		
 
-
-BotItPixelGet(xget,yget)
+;BotItPixel(xget,yget,w,h,mode,tol,neutron)
+BotItPixel(name,tol,mode,click)
 {
-	
-	
+	;msgbox, %name%   %tol%   %mode%   %click%    %color%   %targetwindow%
+	IniRead,INItoDDLsplit,Botit ini\Botit.ini,Botit Calls,%name%
+	BotitiniXYtmp3:=StrSplit(INItoDDLsplit,"|")
+	color := BotitiniXYtmp3[5]
+	;msgbox,%color%
+	if (runningstate = 2)
+	{
+		
+			return
+	}
 	;pre set clean for scanner
 	Random, SleepAmount, %SleepAmountC%, %SleepAmountD%
 	Gdip_DisposeImage(pBitmap)
@@ -434,6 +447,10 @@ BotItPixelGet(xget,yget)
 	Gdip_DisposeImage(pBitmapBotitN)
 	pBitmapBotitHay :=""
 	pBitmapBotitN :=""
+	Gdip_DisposeImage(bmpHaystack)
+	Gdip_DisposeImage(ARGB)
+	ret :=""
+	Compi :=""
 	Gdip_Shutdown(pToken)
 	;***
 	
@@ -444,198 +461,99 @@ BotItPixelGet(xget,yget)
 		MsgBox, Missing Gdip error! 
 		ExitApp
 	}
-	;0x84C82A
-	;0x2AC784
 	QPX( True )
 	
 	WinGet, hwnd, ID, %targetwindow%
 	bmpHaystack := Gdip_BitmapFromScreen("hwnd:" hwnd)
-	ARGB := GDIP_GetPixel(bmpHaystack, xget, yget)
+
+	;msgbox, %name%   %tol%  %mode%   %click%   %color% 
 	
-	;setformat,integer,hex
-	;ARGB +=0
-	;msgbox, %ARGB%
-	Gdip_DisposeImage(bmpHaystack)
-	MsgBox, % ARGBtoRGB( ARGB )
-	ARGB := Format("0x{:06X}", ARGB & 0xFFFFFF)
-	ARGB :="0x" . SubStr(ARGB, 7, 2) . SubStr(ARGB, 5, 2) . SubStr(ARGB, 3, 2)
-	setformat,integer,d
-	msgbox, %ARGB%
-	return
-	;**
-	if (Mode = "area")
+	;pixel detect
+	if (mode = "single")
 	{
-		WinGet, hWnd,ID,%targetwindow%
-		pBitmapBotitHay := Gdip_BitmapFromHWNDCropped(hWnd, tmpoX1 "|" tmpoY1 "|" tmpoX2 "|" tmpoY2)
-	}
-	else
-	{
-		pBitmapBotitHay := Gdip_BitmapFromHWND(hwnd := WinExist("" targetwindow ""  )) ;user grabbed mirror/window name
-		
-	}
-	;Neddle and Hay from target window and picked image
-	pBitmapBotitN := Gdip_CreateBitmapFromFile(ImgFileName) ;user image
-	Width := Gdip_GetImageWidth(pBitmapBotitHay), Height := Gdip_GetImageHeight(pBitmapBotitHay)
-	pBitmap := Gdip_CreateBitmap(Width,height)
-	BotitG := Gdip_GraphicsFromImage(pBitmap)
-	;***
-	
-	if (Colors = "G")
-	{	
-	;///grayscale
-		;msgbox,gray
-		Matrix = 0.299|0.299|0.299|0|0|0.587|0.587|0.587|0|0|0.114|0.114|0.114|0|0|0|0|0|1|0|0|0|0|0|1
-	;///
-	}
-	
-	
-	;Scanner Modes
-	Gdip_DrawImage(BotitG, pBitmapBotitHay, 0, 0, Width, Height, 0, 0, Width, Height, Matrix)
-	if (Mode = "Single")
-	{
-		;msgbox,Single
-		result:= Gdip_ImageSearch(pBitmap,pBitmapBotitN,List,0,0,0,0,Diff,0,1,1)
-	}
-	
-	if (Mode = "Area")
-	{
-		WinGetPos,areatmpx,areatmpy,areatmpw,areatmph,%targetwindow%
-		
-		if (tmpoX1 < 0)
-		{
-			limeterX1 := 0
-		}
-		else
-		{
-			limeterX1 := 0
-		}
-		if (tmpoY1 < 0)
-		{
-			limeterY1 := 0
-		}
-		else
-		{
-			limeterY1 := 0
-		}
-		if (tmpoX2 > areatmpw)
-		{
-			limeterX2 := areatmpw
-		}
-		else
-		{
-			limeterX2 := 0
-		}
-		if (tmpoY2 > areatmph)
-		{
-			limeterY2 := areatmph
-		}
-		else
-		{
-			limeterY2 := 0
-		}
-		result:= Gdip_ImageSearch(pBitmap,pBitmapBotitN,List,%limeterX1%,%limeterY1%,%limeterX2%,%limeterY2%,diff,0,1,1)
-	}
-	
-	if (Mode = "Multi")
-	{
-		;msgbox, multi
-		result:= Gdip_ImageSearch(pBitmap,pBitmapBotitN,List,0,0,0,0,Diff,0,1,0)
-	}
-	;****
-	
-	;image size for Calcs
-	canterx:= Gdip_GetImageWidth( pBitmapBotitN )
-	cantery:= Gdip_GetImageHeight( pBitmapBotitN )
-	;
-	
-	
-	;Clean UP
-	Gdip_DisposeImage(pBitmap)
-	Gdip_DeleteGraphics(BotitG)
-	Gdip_DisposeImage(pBitmapBotitHay)
-	Gdip_DisposeImage(pBitmapBotitN)
-	pBitmapBotitHay :=""
-	pBitmapBotitN :=""
-	Gdip_Shutdown(pToken)
-	;***
-	
-	;Results Handler
-	
-	if (result) 
-	{  
-		if (Mode = "Area")
-		{
-			StringSplit, LISTArray, LIST, `,  
-			truex:=LISTArray1 + tmpoX1
-			truey:=LISTArray2 + tmpoY1
-		}
-		
-		else
-		{
-			StringSplit, LISTArray, LIST, `,  
-			truex:=LISTArray1 
-			truey:=LISTArray2
-		}
-		
-		;canterx /= 2  ;click on center
-		;cantery /= 2  ;click on center
-		;truex:= truex + canterx  ;click on center
-		;truey:= truey + cantery  ;click on center
-		
-		;Random area Inside Found Image Calc
-		random,Xrnd,0,canterx ;click on Random inside image W size
-		random,Yrnd,0,cantery ;click on Random inside image H size
-		truex:= truex + Xrnd
-		truey:= truey + Yrnd
-		
-		if (Mode = "Multi")
-		{
-			if (result > 1)
-			{
-				
-				return true
-			}
-			
-			else
-			{
-				
-				return false
-			}
-		}
 		
 		
-		if (result = 1)  ;if image found
+		IniRead,BotitiniXY,Botit ini\ImageXY.ini,Botit XY,%Name%
+		namer := "Botitini" Name
+		BotitiniXYtmp:=StrSplit(BotitiniXY,"|")
+		xget := BotitiniXYtmp[1]
+		yget := BotitiniXYtmp[2]
+		
+
+		ARGB := GDIP_GetPixel(bmpHaystack, xget, yget)
+		ret := ARGBtoRGB(ARGB)
+		Compi := COMPARE(ret, color)
+		if ( Compi > tol)
 		{
-			
-			GuiControl,, MyProgress, +10	
-			;Time Tracker
 			Ti :=  QPX( False )
 			timea:=(a - A_tickcount)/1000
-			GuiControl,1:,Botittext2,Found %ImgFileName% Scan Time:%Ti%
-			
-			If Clicks = 0
+			;Clean UP
+			Gdip_DisposeImage(bmpHaystack)
+			Gdip_DisposeImage(ARGB)
+			ret :=""
+			Compi :=""
+			Gdip_Shutdown(pToken)
+			;***
+			;msgbox,%tol%  not found Time:%Ti%
+			Return
+		}
+		Else
+		{
+			If Click = 0
 			{
 				
-				global truex2:=truex
-				global truey2:=truey
+				global truexpixel:=xget
+				global trueypixel:=yget
+				Ti :=  QPX( False )
+				critical,Off
+				timea:=(a - A_tickcount)/1000
+				;Clean UP
+				Gdip_DisposeImage(bmpHaystack)
+				Gdip_DisposeImage(ARGB)
+				ret :=""
+				Compi :=""
+				Gdip_Shutdown(pToken)
+				GuiControl,,Botittext2,Found %ImgFileName% Scan Time:%Ti%
+				;neutronjswrap("statustext","innerHTML","Found " name  " Scan Time:" Ti,neutron)
+				sleep,10
 				return true
 				
 			}
 			
 			
-			If Clicks = 1
+			If Click = 1
 			{
+				
+				random,Xrnd,0,6 ;click on Random inside image W size
+				random,Yrnd,0,6 ;click on Random inside image H size
+				truex:= xget + Xrnd
+				truey:= yget + Yrnd
+
+
+
 				if (Controlchoice = "Auto-Mirror")
 				{
 					ControlClick2(truex, truey , targetwindow)
+					
+					Ti :=  QPX( False )
+					GuiControl,,Botittext2,Found %ImgFileName% Scan Time:%Ti%
 					critical,Off
+					timea:=(a - A_tickcount)/1000
+					;Clean UP
+					Gdip_DisposeImage(bmpHaystack)
+					Gdip_DisposeImage(ARGB)
+					ret :=""
+					Compi :=""
+					Gdip_Shutdown(pToken)
 					Sleep, %SleepAmount%
+					;neutronjswrap("statustext","innerHTML","Found " name "Scan Time:" Ti,neutron)
 					return true
 				}
 				
 				if (Controlchoice = "HumanMouse")	
 				{
-					
+					Ti :=  QPX( False )
+					GuiControl,,Botittext2,Found %ImgFileName% Scan Time:%Ti%
 					WinGetPos,Gx,Gy,Gw,Gh,%targetwindow%
 					truex:=Gx+truex
 					truey:=Gy+truey
@@ -652,30 +570,183 @@ BotItPixelGet(xget,yget)
 				
 				if (Controlchoice = "PC/Emulator")	
 				{
+					
 					ControlClick, x%truex% y%truey%, %targetwindow%,,Left,1, NA
+					Ti :=  QPX( False )
 					critical,Off
+					GuiControl,,Botittext2,Found %ImgFileName% Scan Time:%Ti%
+					timea:=(a - A_tickcount)/1000
+					;Clean UP
+					Gdip_DisposeImage(bmpHaystack)
+					Gdip_DisposeImage(ARGB)
+					ret :=""
+					Compi :=""
+					Gdip_Shutdown(pToken)
+					;neutronjswrap("statustext","innerHTML","Found " name "Scan Time:" Ti,neutron)
 					Sleep, %SleepAmount%
 					return true
 				}
 				
 			}
+			
 		}
-		
-		
-		return
 	}
-	else ;if image Not found
+
+	if (mode = "Area")
 	{
 		
+		IniRead,BotitiniXY,Botit ini\ImageXY.ini,Botit XY,%Name%
+		namer := "Botitini" Name
+		BotitiniXYtmp:=StrSplit(BotitiniXY,"|")
+		xget := BotitiniXYtmp[1]
+		yget := BotitiniXYtmp[2]
+		w := BotitiniXYtmp[3] - xget
+		h := BotitiniXYtmp[4] - yget
 		
-		Ti :=  QPX( False )
-		timea:=(a - A_tickcount)/1000
-		return false
+		
+		;w := w-xget
+		;h:= h-yget
+		;xgettmp := xget
+		;ygettmp := yget
+		;msgbox , %w%   %h%  %xget%  %yget%
+		loop,%h%
+		{
+			if (A_Index = 1)
+			{
+				ygettmp := yget
+			}
+			Else
+			{
+				ygettmp := ygettmp+1
+			}
+			
+			;msgbox,%ygettmp%   %yget%
+			loop,%w%
+			{
+				if (A_Index = 1)
+				{
+					xgettmp := xget
+				}
+				Else
+				{
+					
+					xgettmp := xgettmp+1
+				}
+				;xgettmp := xget+A_Index
+				ARGB := GDIP_GetPixel(bmpHaystack, xgettmp, ygettmp)
+				ret := ARGBtoRGB(ARGB)
+				Compi := COMPARE(ret, color)
+				if ( Compi > tol)
+				{
+					;msgbox,%tol%  not found
+					Continue
+					
+				}
+				Else
+				{
+					
+					If Click = 0
+					{
+						
+						global truexpixel:=xgettmp
+						global trueypixel:=ygettmp
+						Ti :=  QPX( False )
+						critical,Off
+						timea:=(a - A_tickcount)/1000
+						;Clean UP
+						Gdip_DisposeImage(bmpHaystack)
+						Gdip_DisposeImage(ARGB)
+						ret :=""
+						Compi :=""
+						Gdip_Shutdown(pToken)
+						GuiControl,,Botittext2,Found %ImgFileName% Scan Time:%Ti%
+						;neutronjswrap("statustext","innerHTML","Found " name  " Scan Time:" Ti,neutron)
+						sleep,10
+						return true
+						
+					}
+					
+					
+					If Click = 1
+					{
+						
+						random,Xrnd,0,6 ;click on Random inside image W size
+						random,Yrnd,0,6 ;click on Random inside image H size
+						truex:= xgettmp + Xrnd
+						truey:= ygettmp + Yrnd
+
+
+
+						if (Controlchoice = "Auto-Mirror")
+						{
+							ControlClick2(truex, truey , targetwindow)
+							
+							Ti :=  QPX( False )
+							critical,Off
+							GuiControl,,Botittext2,Found %ImgFileName% Scan Time:%Ti%
+							timea:=(a - A_tickcount)/1000
+							;Clean UP
+							Gdip_DisposeImage(bmpHaystack)
+							Gdip_DisposeImage(ARGB)
+							ret :=""
+							Compi :=""
+							Gdip_Shutdown(pToken)
+							Sleep, %SleepAmount%
+							;neutronjswrap("statustext","innerHTML","Found " name "Scan Time:" Ti,neutron)
+							return true
+						}
+						
+						if (Controlchoice = "HumanMouse")	
+						{
+							Ti :=  QPX( False )
+							WinGetPos,Gx,Gy,Gw,Gh,%targetwindow%
+							truex:=Gx+truex
+							truey:=Gy+truey
+							Random, Movernd1, 12, 22
+							Random, RandomT, %Vt1%, %Vt2%
+							RandomBezier( 0, 0, truex ,truey,"T"RandomT "RO")
+							MouseClick,Left,%truex% ,%truey%,1,%Movernd1%
+							critical,Off
+							GuiControl,,Botittext2,Found %ImgFileName% Scan Time:%Ti%
+							Sleep, %SleepAmount%
+							global truex2:=truex
+							global truey2:=truey
+							return true
+						}
+						
+						if (Controlchoice = "PC/Emulator")	
+						{
+							ControlClick, x%truex% y%truey%, %targetwindow%,,Left,1, NA
+							Ti :=  QPX( False )
+							critical,Off
+							GuiControl,,Botittext2,Found %ImgFileName% Scan Time:%Ti%
+							timea:=(a - A_tickcount)/1000
+							;Clean UP
+							Gdip_DisposeImage(bmpHaystack)
+							Gdip_DisposeImage(ARGB)
+							ret :=""
+							Compi :=""
+							Gdip_Shutdown(pToken)
+							;neutronjswrap("statustext","innerHTML","Found " name "Scan Time:" Ti,neutron)
+							Sleep, %SleepAmount%
+							return true
+						}
+						
+					}
+					
+					
+				}
+				
+			}
+		}
+			
+
+		
 	}
-	
+	Return
 	
 }
-		
+
 
 
 ;scan all images inside img/Random/ folder and match them to the target
@@ -931,97 +1002,6 @@ BotItFolderScanner(Diff,Colors) ; Diff 1-245 | Colors C/G  *full color and grays
 }
 
 
-;Botit Pixel Scanner
-BotItPixel(BotItNumber,Diff,Clicks)
-{
-
-	Random, SleepAmount, %SleepAmountC%, %SleepAmountD%
-	a:=A_tickcount
-	If !pToken := Gdip_Startup()
-	{
-		MsgBox, Missing Gdip error! 
-		ExitApp
-	}
-	
-	QPX( True )
-	
-	IniRead,Botitini,Botit ini\ImageXY.ini,Botit Pixel XY,%BotItNumber%
-	Botitini:=StrSplit(Botitini,"|")
-	
-	WinGetPos,Pixelx,Pixely,Pixelw,Pixelh,%targetwindow%
-	pixelx1 := Botitini[1]
-	pixely1 := Botitini[2]
-	pixelx2 := Botitini[3]
-	pixely2 := Botitini[4]
-	PixelColor := Botitini[5]
-	;msgbox,%pixelx1%  %PixelColor%
-	
-	AreaX := pixelx1+Pixelx
-	AreaY := pixely1+Pixely
-	AreaX2 :=  pixelx2+Pixelx
-	AreaY2 :=  pixely2+Pixely
-	
-	
-	PixelSearch,cX,cY,%AreaX%,%AreaY%,%AreaX2%,%AreaY2%,%PixelColor%,%Diff%,Fast|RGB ; Green ore scanner
-	if ErrorLevel=0 ; if found
-	{
-		
-		Ti :=  QPX( False )
-		timea:=(a - A_tickcount)/1000
-		GuiControl,,Botittext2,Found %BotItNumber% Scan Time:%Ti%
-		If Clicks = 1
-		{
-			if (Controlchoice = "Auto-Mirror")
-			{
-				WinGetPos,Gx,Gy,Gw,Gh,%targetwindow%
-				truex:=cX-Gx
-				truey:=cY-Gy
-				
-				ControlClick2(truex, truey , targetwindow)
-				Sleep, %SleepAmount%
-				return true
-			}
-			
-			if (Controlchoice = "HumanMouse")	
-			{
-				
-				WinGetPos,Gx,Gy,Gw,Gh,%targetwindow%
-				truex:=cX
-				truey:=cY
-				Random, Movernd1, 12, 22
-				Random, RandomT, %Vt1%, %Vt2%
-				RandomBezier( 0, 0, truex ,truey,"T"RandomT "RO")
-				MouseClick,Left,%truex% ,%truey%,1,%Movernd1%
-				
-				Sleep, %SleepAmount%
-				global truex2:=truex
-				global truey2:=truey
-				return true
-			}
-			
-			if (Controlchoice = "PC/Emulator")	
-			{
-				WinGetPos,Gx,Gy,Gw,Gh,%targetwindow%
-				
-				truex:=cX-Gx
-				truey:=cY-Gy
-				
-				ControlClick, x%truex% y%truey%, %targetwindow%,,Left,1, NA
-				Sleep, %SleepAmount%
-				return true
-			}
-			
-		}
-		return true
-	}	
-	if ErrorLevel=1 ; if not found
-	{
-		;msgbox, not found
-		Ti :=  QPX( False )
-		timea:=(a - A_tickcount)/1000
-		return false
-	}
-}	
 
 ;Test hWnd Cut
 ImageSearch_hWndCut(BotitName)
@@ -1606,3 +1586,35 @@ EnumChildFindHwnd(aWnd, lParam)
     return true
 }
 
+;by skrommel
+COMPARE(color1,color2)  ; colors in hex format  "0xff8728"
+{
+  
+  Loop,2
+  {
+    param:=A_Index
+    StringTrimLeft,color%param%,color%param%,2
+    Loop,3
+    {
+      StringLeft,c%param%%A_Index%,color%param%,2
+      value:=c%param%%A_Index%
+      c%param%%A_Index%=0x%value%
+      StringTrimLeft,color%param%,color%param%,2
+    }
+  } 
+  difference:=(Abs(c11-c21)+Abs(c12-c22)+Abs(c13-c23))/3
+  
+  Return difference
+}
+
+
+
+ConvertARGB(ARGB, Convert := 0)
+{
+    SetFormat, IntegerFast, Hex
+    RGB += ARGB
+    RGB := RGB & 0x00FFFFFF
+    if (Convert)
+        RGB := (RGB & 0xFF000000) | ((RGB & 0xFF0000) >> 16) | (RGB & 0x00FF00) | ((RGB & 0x0000FF) << 16)
+    return RGB
+}
