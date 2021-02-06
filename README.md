@@ -1,3 +1,20 @@
+Update 1.1.0:
+
+Added Background window pixel scanner single point and area scan to botit manager and botit.
+auto get pixel color and cord button.
+*you can now make and add pixel scans to the modes
+
+Fix small memeory leaks in Botit ahk and BotitRND
+
+Botit Cloud Export as been added. it allow one click export of all the data(it will self correct everything it need).
+
+Added Zoom Protect to check screen zoom level
+Added Window Size protect to botit manager and Botit. (self size the window to the image crop size.)
+
+
+
+
+
 Botit AHK is full gui Automation tool.
 holding a powerful and tiny image and pixel scanner with full background window screenshot support.
 Self and auto calculation of any matched image with easy and clear control for each image and mode.
