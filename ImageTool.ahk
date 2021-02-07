@@ -1129,5 +1129,19 @@ return
 ;Includes
 #Include %A_ScriptDir%\Core\Gdip_All.ahk
 #Include %A_ScriptDir%\Core\Clipper.ahk
-#Include %A_ScriptDir%\Botit Functions\func.ahk
-#Include %A_ScriptDir%\Core\INIReader.ahk  ; Get Image Cords from INI
+;#Include %A_ScriptDir%\Botit Functions\func.ahk
+
+;#Include %A_ScriptDir%\Core\INIReader.ahk  ; Get Image Cords from INI
+global truex2 := 0
+global truey2 := 0
+
+#Include %A_ScriptDir%\Core\BackgroundScanner.ahk ; bundle the all tools to allow Scan "mode"
+#Include %A_ScriptDir%\Core\controlclick.ahk ; controller to window mouse and key
+;#Include %A_ScriptDir%\Core\Gdip_All.ahk ; image edit tool
+#Include %A_ScriptDir%\Core\Gdip_ImageSearch.ahk  ; img scan funcs
+#Include %A_ScriptDir%\Core\RandomBezier.ahk ; human Mouse
+#Include %A_ScriptDir%\Core\AnimatedGifControl.ahk
+#include Core\Includer.ahk
+
+
+Random, SleepAmount, %SleepAmountA%, %SleepAmountB%
