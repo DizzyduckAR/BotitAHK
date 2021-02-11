@@ -705,16 +705,10 @@ return
 
 GetCords:
 {
-  GetCords2()
-}
-return
-
-GetCords2()
-{
- 
   KeyWait, LButton, U
   ScreenCapture(location:="clipboard")
   sleep, 100
+  ;msgbox, BW2 %BW2%   BH2  %BH2%   tmpsnapX  %tmpsnapX%   tmpsnapY  %tmpsnapY%
   BW2 := BW2+tmpsnapX
   BH2 := BH2+tmpsnapY
   GuiControl,,SSMx1, %tmpsnapX%
@@ -722,6 +716,41 @@ GetCords2()
   GuiControl,,SSMx2, %BW2%
   GuiControl,,SSMy2, %BH2%
   GuiControl,choose,SSMModeCombo,Area
+  BW2:=
+  BH2 :=
+  tmpsnapX :=
+  tmpsnapY :=
+  XtmpSnap:=
+	YtmpSnap:=
+	tmpSnapXwin:=
+	tmpSnapYwin:=
+  title:=
+}
+return
+
+GetCords2()
+{
+ ;msgbox,2
+  KeyWait, LButton, U
+  ScreenCapture(location:="clipboard")
+  sleep, 100
+  ;msgbox, BW2 %BW2%   BH2  %BH2%   tmpsnapX  %tmpsnapX%   tmpsnapY  %tmpsnapY%
+  BW2 := BW2+tmpsnapX
+  BH2 := BH2+tmpsnapY
+  GuiControl,,SSMx1, %tmpsnapX%
+  GuiControl,,SSmy1, %tmpsnapY%
+  GuiControl,,SSMx2, %BW2%
+  GuiControl,,SSMy2, %BH2%
+  GuiControl,choose,SSMModeCombo,Area
+  BW2:=
+  BH2 :=
+  tmpsnapX :=
+  tmpsnapY :=
+  XtmpSnap:=
+	YtmpSnap:=
+	tmpSnapXwin:=
+	tmpSnapYwin:=
+  title:=
 }
 
 flow:
@@ -771,7 +800,7 @@ ControlMove: ;control move label
   {
     lowmode:=SubStr(lowmode, 1, InStr(lowmode, "Copy") - 1)
 
-    msgbox %lowmode%
+    ;msgbox %lowmode%
   }
 
 
@@ -1647,13 +1676,13 @@ BotitScreenshot(Nameimg)
   sleep,50
   ;msgbox, x1 %tmpsnapX% y1 %tmpsnapY% x2  %BW2%  y2  %BH2%
   installerimagebuilder(Nameimg,Title,tmpsnapX,tmpsnapY,BW2,BH2)
-  Nameimg:=
-  Title:=
-  tmpsnapX:=
-  tmpsnapY:=
-  BW2:=
-  BH2:=
-
+  Nameimg:= ""
+  Title:=""
+  tmpsnapX:=""
+  tmpsnapY:=""
+  BW2:=""
+  BH2:=""
+  Clipboard :=
 
 	Gdip_Shutdown(pToken)
 	msgbox,,,Crop Fin,1

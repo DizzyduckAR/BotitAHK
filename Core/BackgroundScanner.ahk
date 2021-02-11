@@ -495,7 +495,7 @@ BotItPixel(name,tol,mode,click)
 			Gdip_Shutdown(pToken)
 			;***
 			;msgbox,%tol%  not found Time:%Ti%
-			Return
+			Return False
 		}
 		Else
 		{
@@ -608,7 +608,7 @@ BotItPixel(name,tol,mode,click)
 		;h:= h-yget
 		;xgettmp := xget
 		;ygettmp := yget
-		;msgbox , %w%   %h%  %xget%  %yget%
+		;msgbox ,X %xget% Y %yget% W %w%  H %h% 
 		loop,%h%
 		{
 			if (A_Index = 1)
@@ -635,17 +635,24 @@ BotItPixel(name,tol,mode,click)
 				;xgettmp := xget+A_Index
 				ARGB := GDIP_GetPixel(bmpHaystack, xgettmp, ygettmp)
 				ret := ARGBtoRGB(ARGB)
+				;msgbox, ret %ret%  color %color%
 				Compi := COMPARE(ret, color)
 				if ( Compi > tol)
 				{
-					;msgbox,%tol%  not found
+					;msgbox,%tol% vs %Compi%  not found X %xgettmp%   Y %ygettmp%
 					Continue
 					
 				}
-				Else
+				
+				if Compi is space
 				{
-					
-					If Click = 0
+					Continue
+				}
+				;msgbox,%tol% vs %Compi%  found X %xgettmp%   Y %ygettmp%  ret %ret%  color %color%
+				;Else
+				;{
+				;	msgbox,%tol% vs %Compi%
+					If (Click = 0)
 					{
 						
 						global truexpixel:=xgettmp
@@ -667,9 +674,9 @@ BotItPixel(name,tol,mode,click)
 					}
 					
 					
-					If Click = 1
+					If (Click = 1)
 					{
-						
+						;msgbox,click
 						random,Xrnd,0,6 ;click on Random inside image W size
 						random,Yrnd,0,6 ;click on Random inside image H size
 						truex:= xgettmp + Xrnd
@@ -735,7 +742,7 @@ BotItPixel(name,tol,mode,click)
 					}
 					
 					
-				}
+				;}
 				
 			}
 		}
@@ -743,7 +750,7 @@ BotItPixel(name,tol,mode,click)
 
 		
 	}
-	Return
+	Return False
 	
 }
 

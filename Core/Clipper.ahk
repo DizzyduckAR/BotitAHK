@@ -93,7 +93,11 @@ ScreenCapture(location:="clipboard"){
 	
 	global BW2:= BW
 	global BH2:= BH
-	
+	BW:=
+	BH:=
+	TLX:=
+	TLY:=
+
 	if (!pToken:=Gdip_Startup()) {
           msgbox, 48, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system
           ExitApp
@@ -162,6 +166,7 @@ DefineBox(ByRef TopLeftX, ByRef TopLeftY, ByRef BottomRightX, ByRef BottomRightY
 	MouseGetPos,,,guideUnderCursor
 	WinGetTitle, Title, ahk_id %guideUnderCursor%
 	WinGetPos,tmpSnapXwin, tmpSnapYwin,,,%Title%
+	;msgbox, %tmpSnapXwin% %tmpSnapYwin%
 	ToolTip, Click and Drag Area with Right mouse button
 	KeyWait, LButton, U
 	
@@ -245,7 +250,10 @@ DefineBox(ByRef TopLeftX, ByRef TopLeftY, ByRef BottomRightX, ByRef BottomRightY
 			
 			global tmpsnapX:= XtmpSnap - tmpSnapXwin
 			global tmpsnapY:= YtmpSnap - tmpSnapYwin
-			
+			XtmpSnap:=
+			YtmpSnap:=
+			tmpSnapXwin:=
+			tmpSnapYwin:=
 			Break
 			
 		}
