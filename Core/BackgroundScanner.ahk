@@ -157,7 +157,7 @@ BotItScanner(Name,Diff,Mode,Colors,Clicks)
 		}
 		else
 		{
-			limeterX2 := 0
+			limeterX2 := areatmpw
 		}
 		if (tmpoY2 > areatmph)
 		{
@@ -165,7 +165,7 @@ BotItScanner(Name,Diff,Mode,Colors,Clicks)
 		}
 		else
 		{
-			limeterY2 := 0
+			limeterY2 := areatmph
 		}
 		result:= Gdip_ImageSearch(pBitmap,pBitmapBotitN,List,%limeterX1%,%limeterY1%,%limeterX2%,%limeterY2%,diff,0,1,1)
 	}
