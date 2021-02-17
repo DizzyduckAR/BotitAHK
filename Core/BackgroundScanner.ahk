@@ -157,7 +157,7 @@ BotItScanner(Name,Diff,Mode,Colors,Clicks)
 		}
 		else
 		{
-			limeterX2 := areatmpw
+			limeterX2 := tmpoX2
 		}
 		if (tmpoY2 > areatmph)
 		{
@@ -165,7 +165,7 @@ BotItScanner(Name,Diff,Mode,Colors,Clicks)
 		}
 		else
 		{
-			limeterY2 := areatmph
+			limeterY2 := tmpoY2
 		}
 		result:= Gdip_ImageSearch(pBitmap,pBitmapBotitN,List,%limeterX1%,%limeterY1%,%limeterX2%,%limeterY2%,diff,0,1,1)
 	}
@@ -502,8 +502,8 @@ BotItPixel(name,tol,mode,click)
 			If Click = 0
 			{
 				
-				global truexpixel:=xget
-				global trueypixel:=yget
+				global truex2:=xget
+				global truex2:=yget
 				Ti :=  QPX( False )
 				critical,Off
 				timea:=(a - A_tickcount)/1000
@@ -570,7 +570,8 @@ BotItPixel(name,tol,mode,click)
 				
 				if (Controlchoice = "PC/Emulator")	
 				{
-					
+					global truex2:=truex
+					global truey2:=truey
 					ControlClick, x%truex% y%truey%, %targetwindow%,,Left,1, NA
 					Ti :=  QPX( False )
 					critical,Off
@@ -654,9 +655,9 @@ BotItPixel(name,tol,mode,click)
 				;	msgbox,%tol% vs %Compi%
 					If (Click = 0)
 					{
-						
-						global truexpixel:=xgettmp
-						global trueypixel:=ygettmp
+					;	msgbox,%tol% vs %Compi%  found X %xgettmp%   Y %ygettmp%  ret %ret%  color %color%
+						global truex2:=xgettmp
+						global truey2:=ygettmp
 						Ti :=  QPX( False )
 						critical,Off
 						timea:=(a - A_tickcount)/1000
@@ -687,7 +688,8 @@ BotItPixel(name,tol,mode,click)
 						if (Controlchoice = "Auto-Mirror")
 						{
 							ControlClick2(truex, truey , targetwindow)
-							
+							global truex2:=truex
+							global truey2:=truey
 							Ti :=  QPX( False )
 							critical,Off
 							GuiControl,,Botittext2,Found %ImgFileName% Scan Time:%Ti%
@@ -733,6 +735,8 @@ BotItPixel(name,tol,mode,click)
 							Gdip_DisposeImage(ARGB)
 							ret :=""
 							Compi :=""
+							global truex2:=truex
+							global truey2:=truey
 							Gdip_Shutdown(pToken)
 							;neutronjswrap("statustext","innerHTML","Found " name "Scan Time:" Ti,neutron)
 							Sleep, %SleepAmount%
